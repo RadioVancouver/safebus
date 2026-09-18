@@ -16,11 +16,12 @@ function Student() {
   const [alertMessage, setAlertMessage] = useState('')
   const [locationWarning, setLocationWarning] = useState('')
 
-  // VEHÍCULO / PLACA
-  const [transportType, setTransportType] = useState('combi')
+  // VEHÍCULO REGISTRADO
   const [vehiclePlate, setVehiclePlate] = useState('')
+  const [vehicleSuggestions, setVehicleSuggestions] = useState([])
   const [vehicleLookupMessage, setVehicleLookupMessage] = useState('')
   const [selectedBus, setSelectedBus] = useState(null)
+  const [vehicleSearching, setVehicleSearching] = useState(false)
 
   // WHATSAPP DE EMERGENCIA
   const [whatsappLinks, setWhatsappLinks] = useState([])
@@ -598,15 +599,19 @@ function Student() {
       .replace(/\s+/g, '')
   }
 
-  async function findVehicleByPlate() {
-    const plate = normalizePlate(vehiclePlate)
+  async function searchRegisteredVehicles(value) {
+    const plate = normalizePlate(value)
 
-    setSelectedBus(null)
     setVehicleLookupMessage('')
 
     if (!plate) {
-      return null
+      setVehicleSuggestions([])
+      setSelectedBus(null)
+      setVehicleSearching(false)
+      return
     }
+
+    setVehicleSearching(true)
 
     try {
       const { data, error: busError } = await supabase
@@ -621,47 +626,40 @@ function Student() {
           active
         `)
         .eq('active', true)
-        .eq('plate', plate)
-        .maybeSingle()
+        .ilike('plate', `%${plate}%`)
+        .order('plate', { ascending: true })
+        .limit(8)
 
       if (busError) {
         console.warn(
-          'No se pudo consultar la placa:',
+          'No se pudieron consultar los vehículos registrados:',
           busError
         )
-
+        setVehicleSuggestions([])
         setVehicleLookupMessage(
-          'No se pudo verificar la placa. La alerta continuará igualmente.'
+          'No se pudieron consultar los vehículos registrados.'
         )
-
-        return null
+        return
       }
 
-      if (!data) {
+      setVehicleSuggestions(data || [])
+
+      if ((data || []).length === 0) {
         setVehicleLookupMessage(
-          'Vehículo no registrado. La alerta continuará igualmente y se enviará a tus contactos.'
+          'No hay vehículos registrados con esa placa. Puedes activar la alerta igualmente.'
         )
-
-        return null
       }
-
-      setSelectedBus(data)
-      setVehicleLookupMessage(
-        `Vehículo identificado: ${data.plate}${data.operator_name ? ` · ${data.operator_name}` : ''}.`
-      )
-
-      return data
     } catch (err) {
       console.warn(
-        'Error consultando vehículo:',
+        'Error buscando vehículos registrados:',
         err
       )
-
+      setVehicleSuggestions([])
       setVehicleLookupMessage(
-        'No se pudo verificar la placa. La alerta continuará igualmente.'
+        'No se pudo consultar el registro de vehículos.'
       )
-
-      return null
+    } finally {
+      setVehicleSearching(false)
     }
   }
 
@@ -674,6 +672,22 @@ function Student() {
     setVehiclePlate(value)
     setSelectedBus(null)
     setVehicleLookupMessage('')
+
+    if (!value) {
+      setVehicleSuggestions([])
+      return
+    }
+
+    searchRegisteredVehicles(value)
+  }
+
+  function selectVehicle(bus) {
+    setSelectedBus(bus)
+    setVehiclePlate(bus.plate || '')
+    setVehicleSuggestions([])
+    setVehicleLookupMessage(
+      `Vehículo seleccionado: ${bus.plate}${bus.route ? ` · ${bus.route}` : ''}.`
+    )
   }
 
   async function getCurrentLocation() {
@@ -762,8 +776,9 @@ function Student() {
       console.log('=== SAFEBUS: ACTIVANDO EMERGENCIA ===')
       console.log('Estudiante:', student?.id)
 
-      // La placa es opcional. Si existe, intentamos identificar el vehículo.
-      const bus = await findVehicleByPlate()
+      // El vehículo es opcional. Solo se usa si el estudiante
+      // seleccionó una unidad registrada en la lista.
+      const bus = selectedBus
 
       const position =
         await getCurrentLocation()
@@ -799,12 +814,10 @@ function Student() {
         .insert({
           student_id: student.id,
           bus_id: bus?.id || null,
-          transport_type: transportType || bus?.transport_type || null,
+          transport_type: bus?.transport_type || null,
           vehicle_description: bus
             ? `${bus.plate}${bus.operator_name ? ` · ${bus.operator_name}` : ''}`
-            : vehiclePlate.trim()
-              ? `Placa declarada: ${normalizePlate(vehiclePlate)}`
-              : null,
+            : null,
           route_description: bus?.route || null,
           type: 'emergency',
           status: 'active',
@@ -1274,75 +1287,141 @@ function Student() {
                 <div>
                   <strong>¿En qué vehículo estás?</strong>
                   <p>
-                    Si conoces la placa, SafeBus podrá identificar
-                    la unidad y posteriormente avisar al conductor.
+                    Escribe la placa y selecciona una unidad registrada.
+                    Esta información ayudará a identificar el vehículo y,
+                    si corresponde, al conductor.
                   </p>
                 </div>
                 <span>🚌</span>
               </div>
 
-              <div className="vehicle-form-grid">
-                <div className="vehicle-form-group">
-                  <label htmlFor="transportType">
-                    Tipo de transporte
-                  </label>
-                  <select
-                    id="transportType"
-                    value={transportType}
-                    onChange={(event) =>
-                      setTransportType(event.target.value)
-                    }
-                    disabled={alertLoading}
-                  >
-                    <option value="combi">Combi</option>
-                    <option value="bus">Bus</option>
-                    <option value="sit">SIT</option>
-                    <option value="taxi">Taxi</option>
-                    <option value="other">Otro</option>
-                  </select>
-                </div>
+              <div className="vehicle-form-group">
+                <label htmlFor="vehiclePlate">
+                  Buscar vehículo por placa <span>(opcional)</span>
+                </label>
 
-                <div className="vehicle-form-group">
-                  <label htmlFor="vehiclePlate">
-                    Placa del vehículo <span>(opcional)</span>
-                  </label>
-                  <input
-                    id="vehiclePlate"
-                    type="text"
-                    value={vehiclePlate}
-                    onChange={handlePlateChange}
-                    placeholder="Ej. V8A-123"
-                    maxLength={10}
-                    autoCapitalize="characters"
-                    disabled={alertLoading}
-                  />
-                </div>
+                <input
+                  id="vehiclePlate"
+                  type="text"
+                  value={vehiclePlate}
+                  onChange={handlePlateChange}
+                  placeholder="Ej. V8A-123"
+                  maxLength={10}
+                  autoCapitalize="characters"
+                  autoComplete="off"
+                  disabled={alertLoading}
+                />
+
+                {vehicleSearching && (
+                  <div className="vehicle-searching">
+                    Buscando vehículos registrados...
+                  </div>
+                )}
+
+                {!vehicleSearching &&
+                  vehiclePlate.trim() &&
+                  vehicleSuggestions.length > 0 && (
+                    <div className="vehicle-suggestions">
+                      {vehicleSuggestions.map((bus) => (
+                        <button
+                          key={bus.id}
+                          type="button"
+                          className="vehicle-suggestion"
+                          onClick={() => selectVehicle(bus)}
+                          disabled={alertLoading}
+                        >
+                          <span className="vehicle-suggestion-main">
+                            <strong>{bus.plate}</strong>
+                            {bus.code && (
+                              <small>Código: {bus.code}</small>
+                            )}
+                          </span>
+
+                          <span className="vehicle-suggestion-details">
+                            {bus.transport_type && (
+                              <span>
+                                {bus.transport_type === 'combi'
+                                  ? 'Combi'
+                                  : bus.transport_type === 'bus'
+                                    ? 'Bus'
+                                    : bus.transport_type === 'sit'
+                                      ? 'SIT'
+                                      : bus.transport_type === 'taxi'
+                                        ? 'Taxi'
+                                        : 'Otro'}
+                              </span>
+                            )}
+
+                            {bus.route && (
+                              <span>Ruta: {bus.route}</span>
+                            )}
+
+                            {bus.operator_name && (
+                              <span>{bus.operator_name}</span>
+                            )}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                {!vehicleSearching &&
+                  vehiclePlate.trim() &&
+                  vehicleSuggestions.length === 0 &&
+                  !selectedBus && (
+                    <div className="vehicle-lookup-message vehicle-lookup-info">
+                      {vehicleLookupMessage ||
+                        'No se encontró un vehículo registrado con esa placa.'}
+                    </div>
+                  )}
+
+                {selectedBus && (
+                  <div className="vehicle-selected-card">
+                    <div className="vehicle-selected-icon">✓</div>
+
+                    <div className="vehicle-selected-info">
+                      <strong>{selectedBus.plate}</strong>
+
+                      <span>
+                        {selectedBus.transport_type === 'combi'
+                          ? 'Combi'
+                          : selectedBus.transport_type === 'bus'
+                            ? 'Bus'
+                            : selectedBus.transport_type === 'sit'
+                              ? 'SIT'
+                              : selectedBus.transport_type === 'taxi'
+                                ? 'Taxi'
+                                : 'Otro'}
+
+                        {selectedBus.route
+                          ? ` · Ruta ${selectedBus.route}`
+                          : ''}
+
+                        {selectedBus.operator_name
+                          ? ` · ${selectedBus.operator_name}`
+                          : ''}
+                      </span>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="vehicle-change-button"
+                      onClick={() => {
+                        setSelectedBus(null)
+                        setVehiclePlate('')
+                        setVehicleSuggestions([])
+                        setVehicleLookupMessage('')
+                      }}
+                      disabled={alertLoading}
+                    >
+                      Cambiar
+                    </button>
+                  </div>
+                )}
               </div>
 
-              {vehiclePlate.trim() && !alertLoading && (
-                <button
-                  type="button"
-                  className="vehicle-check-button"
-                  onClick={findVehicleByPlate}
-                >
-                  Verificar placa
-                </button>
-              )}
-
-              {vehicleLookupMessage && (
-                <div
-                  className={`vehicle-lookup-message ${
-                    selectedBus
-                      ? 'vehicle-lookup-success'
-                      : 'vehicle-lookup-info'
-                  }`}
-                >
-                  {selectedBus ? '✓' : 'ℹ️'} {vehicleLookupMessage}
-                </div>
-              )}
-
               <small className="vehicle-optional-note">
-                No conocer la placa no impide activar la emergencia.
+                No encontrar o no conocer la placa no impide activar la emergencia.
               </small>
             </div>
 
