@@ -622,6 +622,9 @@ function Student() {
     setLocationWarning('')
 
     try {
+      console.log('=== SAFEBUS: ACTIVANDO EMERGENCIA ===')
+      console.log('Estudiante:', student?.id)
+
       const position =
         await getCurrentLocation()
 
@@ -695,6 +698,10 @@ function Student() {
         )
       }
 
+      console.log('=== SAFEBUS: ALERTA CREADA ===')
+      console.log('Alert ID:', alert.id)
+      console.log('Llamando a notify-emergency-contacts...')
+
       /*
        * =====================================================
        * NOTIFICAR CONTACTOS DE EMERGENCIA
@@ -723,6 +730,10 @@ function Student() {
           },
         }
       )
+
+      console.log('=== SAFEBUS: RESPUESTA DE EDGE FUNCTION ===')
+      console.log('notificationResult:', notificationResult)
+      console.log('notificationError:', notificationError)
 
       if (notificationError) {
         console.error(
