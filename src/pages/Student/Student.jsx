@@ -696,6 +696,60 @@ function Student() {
       }
 
       /*
+       * =====================================================
+       * NOTIFICAR CONTACTOS DE EMERGENCIA
+       * =====================================================
+       *
+       * La alerta ya fue creada correctamente.
+       *
+       * La Edge Function:
+       * - verifica al estudiante
+       * - verifica la alerta
+       * - busca hasta 2 contactos
+       * - genera un enlace seguro
+       * - registra las notificaciones
+       *
+       * Si la notificación falla, la alerta NO se cancela.
+       */
+
+      const {
+        data: notificationResult,
+        error: notificationError,
+      } = await supabase.functions.invoke(
+        'notify-emergency-contacts',
+        {
+          body: {
+            alert_id: alert.id,
+          },
+        }
+      )
+
+      if (notificationError) {
+        console.error(
+          'Error notificando contactos de emergencia:',
+          notificationError
+        )
+
+        setLocationWarning(
+          'La alerta está activa, pero no se pudo preparar la notificación a tus contactos.'
+        )
+      } else {
+        console.log(
+          'Resultado de notificaciones:',
+          notificationResult
+        )
+
+        if (
+          notificationResult?.share_link?.url
+        ) {
+          console.log(
+            'Enlace seguro generado:',
+            notificationResult.share_link.url
+          )
+        }
+      }
+
+      /*
        * Guardar primera ubicación
        */
 
