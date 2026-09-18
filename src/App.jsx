@@ -6,6 +6,7 @@ import Admin from './pages/Admin/Admin'
 import Students from './pages/Students/Students'
 import Guardians from './pages/Guardians/Guardians'
 import Student from './pages/Student/Student'
+import AlertShare from './pages/AlertShare/AlertShare'
 import ProtectedRoute from './routes/ProtectedRoute'
 
 import './App.css'
@@ -23,6 +24,12 @@ function App() {
         <Route
           path="/login"
           element={<Login />}
+        />
+
+        {/* ENLACE PÚBLICO DE SEGUIMIENTO DE EMERGENCIA */}
+        <Route
+          path="/alerta/:token"
+          element={<AlertShare />}
         />
 
         <Route
