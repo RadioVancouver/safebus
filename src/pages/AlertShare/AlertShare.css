@@ -1,11 +1,14 @@
-* {
-  box-sizing: border-box;
-}
+
+/* =========================================================
+   SAFEBUS — ALERT SHARE
+   Diseño responsive para familiares / contactos
+   ========================================================= */
 
 .alert-share-page {
   min-height: 100vh;
-  padding: 24px 16px 40px;
-  background: #f4f7fb;
+  width: 100%;
+  padding: 20px 14px 36px;
+  background: #f3f6fa;
   color: #172033;
 }
 
@@ -14,25 +17,27 @@
   margin: 0 auto;
 }
 
+/* HEADER */
+
 .alert-share-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 18px 22px;
+  padding: 16px 20px;
   margin-bottom: 16px;
-  border-radius: 18px;
   background: #ffffff;
-  border: 1px solid #dfe5ee;
-  box-shadow: 0 8px 25px rgba(20, 34, 60, 0.06);
+  border: 1px solid #e1e7ef;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
 }
 
 .alert-share-header.active {
-  border-color: #f1c5c5;
+  border-color: #f2c6c6;
 }
 
 .alert-share-header.closed {
-  border-color: #cde8d6;
+  border-color: #bfe3cc;
 }
 
 .alert-share-brand {
@@ -42,22 +47,25 @@
 }
 
 .alert-share-brand-icon {
-  width: 46px;
-  height: 46px;
+  width: 48px;
+  height: 48px;
   display: grid;
   place-items: center;
-  border-radius: 13px;
-  background: #eef3f9;
+  flex: 0 0 48px;
+  border-radius: 14px;
+  background: #edf3fa;
   font-size: 24px;
 }
 
 .alert-share-brand-name {
-  font-size: 20px;
+  font-size: 21px;
+  line-height: 1.1;
   font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .alert-share-brand-subtitle {
-  margin-top: 2px;
+  margin-top: 4px;
   color: #667085;
   font-size: 13px;
 }
@@ -65,12 +73,14 @@
 .alert-share-status {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 9px 13px;
+  padding: 9px 14px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.03em;
+  white-space: nowrap;
 }
 
 .alert-share-status.active {
@@ -86,36 +96,41 @@
 .alert-share-status-dot {
   width: 9px;
   height: 9px;
+  flex: 0 0 9px;
   border-radius: 50%;
   background: currentColor;
 }
 
+/* CARDS */
+
 .alert-share-card {
   background: #ffffff;
-  border: 1px solid #dfe5ee;
+  border: 1px solid #e1e7ef;
   border-radius: 20px;
-  box-shadow: 0 8px 25px rgba(20, 34, 60, 0.06);
+  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
 }
 
 .alert-share-main {
   padding: 22px;
 }
 
+/* STUDENT */
+
 .alert-share-student {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .alert-share-avatar {
-  width: 54px;
-  height: 54px;
-  flex: 0 0 54px;
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: #eaf0f8;
+  background: #eaf1fa;
   color: #193b68;
   font-size: 17px;
   font-weight: 800;
@@ -126,26 +141,32 @@
   margin-bottom: 3px;
   color: #667085;
   font-size: 12px;
+  font-weight: 600;
 }
 
 .alert-share-student h1 {
   margin: 0;
-  font-size: 24px;
+  font-size: clamp(21px, 4vw, 27px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
 }
 
 .alert-share-student p {
-  margin-top: 4px;
+  margin: 5px 0 0;
   color: #667085;
   font-size: 13px;
 }
 
+/* LIVE */
+
 .alert-share-live {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
   margin-bottom: 14px;
-  padding: 10px 12px;
-  border-radius: 10px;
+  padding: 11px 13px;
+  border: 1px solid #ccebd7;
+  border-radius: 11px;
   background: #f0fdf4;
   color: #087443;
   font-size: 13px;
@@ -155,23 +176,30 @@
 .alert-share-live-dot {
   width: 9px;
   height: 9px;
+  flex: 0 0 9px;
   border-radius: 50%;
   background: #16a34a;
-  box-shadow: 0 0 0 5px rgba(22, 163, 74, 0.10);
+  box-shadow: 0 0 0 5px rgba(22, 163, 74, 0.1);
 }
+
+/* MAP */
 
 .alert-share-map-wrap {
   position: relative;
   overflow: hidden;
-  min-height: 420px;
+  width: 100%;
+  border: 1px solid #d8e0ea;
   border-radius: 16px;
-  border: 1px solid #d9e0ea;
   background: #e9eef4;
 }
 
 .alert-share-map {
   width: 100%;
-  height: 420px;
+  height: 480px;
+}
+
+.alert-share-map .leaflet-control-attribution {
+  font-size: 9px;
 }
 
 .alert-share-map-empty {
@@ -181,52 +209,69 @@
   display: grid;
   place-items: center;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.86);
   color: #475467;
+  text-align: center;
+  font-size: 14px;
   font-weight: 700;
 }
 
+/* LOCATION */
+
 .alert-share-location-info {
   margin-top: 14px;
-  padding: 15px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
   border-radius: 14px;
-  background: #f7f9fc;
+  background: #f8fafc;
 }
 
 .alert-share-location-title {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 13px;
+  color: #172033;
+  font-size: 14px;
 }
 
 .alert-share-location-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 12px;
 }
 
 .alert-share-location-grid div {
   min-width: 0;
+  padding: 11px 12px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #e8edf3;
 }
 
 .alert-share-location-grid span {
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
   color: #667085;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .alert-share-location-grid strong {
   display: block;
+  color: #172033;
   font-size: 14px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .alert-share-refreshing {
   margin-top: 10px;
   color: #667085;
   font-size: 12px;
+  text-align: center;
 }
+
+/* DETAILS */
 
 .alert-share-details {
   margin-top: 16px;
@@ -234,7 +279,8 @@
 }
 
 .alert-share-details h2 {
-  margin-bottom: 14px;
+  margin: 0 0 14px;
+  color: #172033;
   font-size: 18px;
 }
 
@@ -242,7 +288,7 @@
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  padding: 11px 0;
+  padding: 12px 0;
   border-bottom: 1px solid #edf0f5;
 }
 
@@ -252,11 +298,16 @@
 
 .alert-share-detail-row span {
   color: #667085;
+  font-size: 14px;
 }
 
 .alert-share-detail-row strong {
+  color: #172033;
+  font-size: 14px;
   text-align: right;
 }
+
+/* SECURITY */
 
 .alert-share-security {
   margin-top: 16px;
@@ -279,38 +330,45 @@
   margin: 0;
 }
 
+/* FOOTER */
+
 .alert-share-footer {
   padding: 18px 0 0;
   color: #98a2b3;
   text-align: center;
-  font-size: 12px;
+  font-size: 11px;
 }
 
-.alert-share-loading {
-  width: min(520px, 100%);
+/* LOADING / ERROR */
+
+.alert-share-loading,
+.alert-share-error {
+  width: min(560px, 100%);
   margin: 10vh auto 0;
   padding: 42px 24px;
   text-align: center;
 }
 
 .alert-share-icon {
-  width: 64px;
-  height: 64px;
+  width: 66px;
+  height: 66px;
   display: grid;
   place-items: center;
-  margin: 0 auto 16px;
+  margin: 0 auto 17px;
   border-radius: 50%;
-  background: #eef4ff;
+  background: #edf4ff;
   font-size: 28px;
 }
 
 .alert-share-loading h1,
 .alert-share-error h1 {
-  margin-bottom: 8px;
+  margin: 0 0 8px;
+  font-size: 25px;
 }
 
 .alert-share-loading p,
 .alert-share-error p {
+  margin: 0;
   color: #667085;
   line-height: 1.5;
 }
@@ -325,17 +383,10 @@
   animation: alert-share-spin 0.8s linear infinite;
 }
 
-.alert-share-error {
-  width: min(620px, 100%);
-  margin: 10vh auto 0;
-  padding: 42px 24px;
-  text-align: center;
-}
-
 .alert-share-icon-error {
   background: #fff0f0;
   color: #b42318;
-  font-size: 26px;
+  font-size: 27px;
   font-weight: 900;
 }
 
@@ -345,34 +396,57 @@
   }
 }
 
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
 @media (max-width: 700px) {
   .alert-share-page {
-    padding: 10px 10px 24px;
+    padding: 8px 8px 24px;
   }
 
   .alert-share-header {
     align-items: flex-start;
     flex-direction: column;
-    padding: 15px;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 15px;
   }
 
   .alert-share-status {
-    align-self: stretch;
-    justify-content: center;
+    width: 100%;
   }
 
   .alert-share-main {
-    padding: 14px;
+    padding: 13px;
+    border-radius: 16px;
+  }
+
+  .alert-share-student {
+    gap: 11px;
+  }
+
+  .alert-share-avatar {
+    width: 50px;
+    height: 50px;
+    flex-basis: 50px;
+    font-size: 15px;
   }
 
   .alert-share-student h1 {
     font-size: 20px;
   }
 
-  .alert-share-map-wrap,
+  .alert-share-student p {
+    font-size: 12px;
+  }
+
+  .alert-share-map-wrap {
+    border-radius: 13px;
+  }
+
   .alert-share-map {
-    min-height: 330px;
-    height: 330px;
+    height: 390px;
   }
 
   .alert-share-location-grid {
@@ -381,6 +455,7 @@
 
   .alert-share-details {
     padding: 16px;
+    border-radius: 16px;
   }
 
   .alert-share-detail-row {
@@ -390,5 +465,23 @@
 
   .alert-share-detail-row strong {
     text-align: left;
+  }
+}
+
+@media (max-width: 430px) {
+  .alert-share-map {
+    height: 340px;
+  }
+
+  .alert-share-brand-name {
+    font-size: 19px;
+  }
+
+  .alert-share-brand-subtitle {
+    font-size: 12px;
+  }
+
+  .alert-share-live {
+    font-size: 12px;
   }
 }
