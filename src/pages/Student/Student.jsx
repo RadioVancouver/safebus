@@ -16,6 +16,9 @@ function Student() {
   const [alertMessage, setAlertMessage] = useState('')
   const [locationWarning, setLocationWarning] = useState('')
 
+  // WHATSAPP DE EMERGENCIA
+  const [whatsappLinks, setWhatsappLinks] = useState([])
+
   const [isHolding, setIsHolding] = useState(false)
   const [holdProgress, setHoldProgress] = useState(0)
 
@@ -609,6 +612,48 @@ function Student() {
     })
   }
 
+  function createWhatsAppLinks(notificationResult) {
+    const shareUrl = notificationResult?.share_link?.url
+    const contacts = Array.isArray(notificationResult?.contacts)
+      ? notificationResult.contacts
+      : []
+
+    if (!shareUrl || contacts.length === 0) {
+      setWhatsappLinks([])
+      return
+    }
+
+    const studentName =
+      student?.profiles?.full_name ||
+      student?.full_name ||
+      'El estudiante'
+
+    const message =
+      `🚨 ALERTA SAFEBUS\n\n` +
+      `${studentName} ha activado una alerta de emergencia.\n\n` +
+      `📍 Puedes consultar su ubicación aquí:\n` +
+      `${shareUrl}\n\n` +
+      `Este enlace permite consultar la ubicación mientras la alerta esté activa.\n\n` +
+      `SafeBus`
+
+    const links = contacts
+      .filter((contact) => contact?.phone)
+      .map((contact) => {
+        const digits = String(contact.phone).replace(/\\D/g, '')
+        const normalizedPhone =
+          digits.length === 9 ? `51${digits}` : digits
+
+        return {
+          id: contact.id || contact.phone,
+          name: contact.contact_name || contact.full_name || 'Contacto',
+          phone: contact.contact_phone || contact.phone,
+          url: `https://wa.me/${normalizedPhone}?text=${encodeURIComponent(message)}`,
+        }
+      })
+
+    setWhatsappLinks(links)
+  }
+
   async function activateEmergency() {
     if (
       !student ||
@@ -620,6 +665,7 @@ function Student() {
     setAlertLoading(true)
     setAlertMessage('')
     setLocationWarning('')
+    setWhatsappLinks([])
 
     try {
       console.log('=== SAFEBUS: ACTIVANDO EMERGENCIA ===')
@@ -757,6 +803,8 @@ function Student() {
             'Enlace seguro generado:',
             notificationResult.share_link.url
           )
+
+          createWhatsAppLinks(notificationResult)
         }
       }
 
@@ -974,6 +1022,7 @@ function Student() {
     stopLocationTracking()
 
     setActiveAlert(null)
+    setWhatsappLinks([])
 
     setAlertMessage(
       'Alerta finalizada. Se registró que estás a salvo.'
@@ -1180,6 +1229,37 @@ function Student() {
               ubicación para facilitar la
               atención de la emergencia.
             </p>
+
+            {whatsappLinks.length > 0 && (
+              <div className="whatsapp-emergency-box">
+                <div className="whatsapp-emergency-title">
+                  <span>📲</span>
+                  <div>
+                    <strong>Enviar alerta por WhatsApp</strong>
+                    <p>
+                      El mensaje ya está preparado. Solo debes
+                      abrir WhatsApp y presionar Enviar.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="whatsapp-contact-list">
+                  {whatsappLinks.map((contact) => (
+                    <a
+                      key={contact.id}
+                      className="whatsapp-contact-button"
+                      href={contact.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span>WhatsApp</span>
+                      <strong>{contact.name}</strong>
+                      <small>{contact.phone}</small>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="alert-status-box">
 
