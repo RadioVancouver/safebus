@@ -19,12 +19,32 @@ function Admin() {
     navigate('/admin/estudiantes')
   }
 
+  function goToDrivers() {
+    setMenuOpen(false)
+    navigate('/admin/conductores')
+  }
+
+  function goToBuses() {
+    setMenuOpen(false)
+    navigate('/admin/buses')
+  }
+
+  function goToGuardians() {
+    setMenuOpen(false)
+    navigate('/admin/familiares')
+  }
+
   return (
     <main className="admin-layout">
+
+      {/* =========================
+          CABECERA
+         ========================= */}
 
       <header className="admin-header">
 
         <div className="admin-brand">
+
           <div className="admin-logo">
             🛡️
           </div>
@@ -33,6 +53,7 @@ function Admin() {
             <strong>SAFE BUS</strong>
             <span>Administración</span>
           </div>
+
         </div>
 
         <button
@@ -61,15 +82,30 @@ function Admin() {
             Estudiantes
           </button>
 
-          <button className="nav-item">
+          <button
+            className="nav-item"
+            onClick={goToDrivers}
+          >
             Conductores
           </button>
 
-          <button className="nav-item">
+          <button
+            className="nav-item"
+            onClick={goToBuses}
+          >
             Buses
           </button>
 
-          <button className="nav-item">
+          <button
+            className="nav-item"
+            onClick={goToGuardians}
+          >
+            Familiares
+          </button>
+
+          <button
+            className="nav-item"
+          >
             Alertas
           </button>
 
@@ -84,94 +120,177 @@ function Admin() {
 
       </header>
 
+
+      {/* =========================
+          CONTENIDO
+         ========================= */}
+
       <section className="admin-content">
 
         <div className="admin-welcome">
+
           <div>
+
             <p className="section-label">
               PANEL DE ADMINISTRACIÓN
             </p>
 
-            <h1>Bienvenido a SafeBus</h1>
+            <h1>
+              Bienvenido a SafeBus
+            </h1>
 
             <p>
               Gestiona la seguridad y el transporte escolar
               de la I.E. Juana Cervantes de Bolognesi.
             </p>
+
           </div>
+
         </div>
 
+
+        {/* =========================
+            TARJETAS
+           ========================= */}
+
         <div className="dashboard-grid">
+
+          {/* ESTUDIANTES */}
 
           <article
             className="dashboard-card"
             onClick={goToStudents}
             style={{ cursor: 'pointer' }}
           >
-            <span className="card-icon">👨‍🎓</span>
+
+            <div className="card-icon">
+              🎓
+            </div>
 
             <div>
-              <span className="card-title">
-                Estudiantes
-              </span>
+              <h3>Estudiantes</h3>
 
-              <strong>0</strong>
+              <p>
+                Registrar y administrar estudiantes.
+              </p>
+
+              <strong>
+                Gestionar →
+              </strong>
             </div>
+
           </article>
 
-          <article className="dashboard-card">
-            <span className="card-icon">🚍</span>
+
+          {/* BUSES */}
+
+          <article
+            className="dashboard-card"
+            onClick={goToBuses}
+            style={{ cursor: 'pointer' }}
+          >
+
+            <div className="card-icon">
+              🚌
+            </div>
 
             <div>
-              <span className="card-title">
-                Buses
-              </span>
+              <h3>Buses</h3>
 
-              <strong>0</strong>
+              <p>
+                Registrar y administrar vehículos.
+              </p>
+
+              <strong>
+                Gestionar →
+              </strong>
             </div>
+
           </article>
 
-          <article className="dashboard-card">
-            <span className="card-icon">👨‍✈️</span>
+
+          {/* CONDUCTORES */}
+
+          <article
+            className="dashboard-card"
+            onClick={goToDrivers}
+            style={{ cursor: 'pointer' }}
+          >
+
+            <div className="card-icon">
+              👨‍✈️
+            </div>
 
             <div>
-              <span className="card-title">
-                Conductores
-              </span>
+              <h3>Conductores</h3>
 
-              <strong>0</strong>
+              <p>
+                Registrar conductores y asignar vehículos.
+              </p>
+
+              <strong>
+                Gestionar →
+              </strong>
             </div>
+
           </article>
 
-          <article className="dashboard-card alert-card">
-            <span className="card-icon">🚨</span>
+
+          {/* ALERTAS */}
+
+          <article
+            className="dashboard-card alert-card"
+            style={{ cursor: 'pointer' }}
+          >
+
+            <div className="card-icon">
+              🚨
+            </div>
 
             <div>
-              <span className="card-title">
-                Alertas activas
-              </span>
+              <h3>Alertas activas</h3>
 
-              <strong>0</strong>
+              <p>
+                Supervisar situaciones de emergencia.
+              </p>
+
+              <strong>
+                Ver alertas →
+              </strong>
             </div>
+
           </article>
 
         </div>
 
+
+        {/* =========================
+            INFORMACIÓN
+           ========================= */}
+
         <section className="admin-info">
 
-          <h2>Estado del sistema</h2>
+          <div className="info-icon">
+            🛡️
+          </div>
 
-          <div className="system-status">
-            <span></span>
+          <div>
 
-            <div>
-              <strong>Sistema operativo</strong>
+            <h2>
+              Sistema SafeBus
+            </h2>
 
-              <p>
-                SafeBus está conectado y listo para
-                gestionar el transporte escolar.
-              </p>
-            </div>
+            <p>
+              Desde este panel puedes administrar los
+              estudiantes, conductores y vehículos registrados
+              en el sistema.
+            </p>
+
+            <p>
+              Los vehículos registrados podrán posteriormente
+              ser asignados a los conductores correspondientes.
+            </p>
+
           </div>
 
         </section>

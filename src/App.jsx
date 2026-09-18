@@ -4,6 +4,8 @@ import Intro from './pages/Intro/Intro'
 import Login from './pages/Login/Login'
 import Admin from './pages/Admin/Admin'
 import Students from './pages/Students/Students'
+import Drivers from './pages/Drivers/Drivers'
+import Buses from './pages/Buses/Buses'
 import Guardians from './pages/Guardians/Guardians'
 import Student from './pages/Student/Student'
 import AlertShare from './pages/AlertShare/AlertShare'
@@ -16,21 +18,18 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        <Route
-          path="/"
-          element={<Intro />}
-        />
+        {/* PÁGINA INICIAL */}
+        <Route path="/" element={<Intro />} />
 
-        <Route
-          path="/login"
-          element={<Login />}
-        />
+        {/* LOGIN */}
+        <Route path="/login" element={<Login />} />
 
-        {/* ENLACE PÚBLICO DE SEGUIMIENTO DE EMERGENCIA */}
-        <Route
-          path="/alerta/:token"
-          element={<AlertShare />}
-        />
+        {/* MAPA PÚBLICO DE ALERTA */}
+        <Route path="/alerta/:token" element={<AlertShare />} />
+
+        {/* =========================
+            PORTAL ADMINISTRADOR
+           ========================= */}
 
         <Route
           path="/admin"
@@ -41,6 +40,7 @@ function App() {
           }
         />
 
+        {/* ESTUDIANTES */}
         <Route
           path="/admin/estudiantes"
           element={
@@ -50,6 +50,27 @@ function App() {
           }
         />
 
+        {/* CONDUCTORES */}
+        <Route
+          path="/admin/conductores"
+          element={
+            <ProtectedRoute allowedRole="admin">
+              <Drivers />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* BUSES / VEHÍCULOS */}
+        <Route
+          path="/admin/buses"
+          element={
+            <ProtectedRoute allowedRole="admin">
+              <Buses />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* FAMILIARES */}
         <Route
           path="/admin/familiares"
           element={
@@ -58,6 +79,10 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* =========================
+            PORTAL ESTUDIANTE
+           ========================= */}
 
         <Route
           path="/estudiante"
