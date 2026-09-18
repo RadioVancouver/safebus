@@ -1,0 +1,1118 @@
+/* =========================================================
+   SAFE BUS - MÓDULO ESTUDIANTE
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+.student-page {
+  min-height: 100vh;
+  background: #f5f7fb;
+  color: #172033;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.student-header {
+  width: 100%;
+  min-height: 76px;
+  padding: 0 32px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e6ef;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.student-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.student-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #eaf0ff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 23px;
+}
+
+.student-brand div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.student-brand strong {
+  font-size: 18px;
+  letter-spacing: 0.4px;
+  color: #172033;
+}
+
+.student-brand span {
+  font-size: 12px;
+  color: #697386;
+}
+
+.student-logout {
+  border: 1px solid #dfe4ec;
+  background: #ffffff;
+  color: #4d596d;
+
+  padding: 9px 14px;
+  border-radius: 9px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.student-logout:hover {
+  background: #f5f7fb;
+}
+
+
+/* =========================================================
+   CONTENIDO
+   ========================================================= */
+
+.student-content {
+  width: min(900px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 42px 0 50px;
+}
+
+.student-welcome {
+  margin-bottom: 28px;
+}
+
+.student-label {
+  margin-bottom: 8px;
+
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+
+  color: #3567d6;
+}
+
+.student-welcome h1 {
+  margin: 0 0 10px;
+
+  font-size: 32px;
+  line-height: 1.2;
+  color: #172033;
+}
+
+.student-welcome p:last-child {
+  max-width: 680px;
+
+  margin: 0;
+
+  color: #697386;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   TARJETA DE EMERGENCIA
+   ========================================================= */
+
+.emergency-card {
+  padding: 34px 28px;
+
+  background: #ffffff;
+  border: 1px solid #e1e6ef;
+  border-radius: 20px;
+
+  text-align: center;
+
+  box-shadow: 0 8px 25px rgba(23, 32, 51, 0.06);
+}
+
+.emergency-icon {
+  width: 62px;
+  height: 62px;
+
+  margin: 0 auto 15px;
+
+  border-radius: 50%;
+
+  background: #fee4e2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 31px;
+}
+
+.emergency-card h2 {
+  margin: 0 0 10px;
+
+  color: #172033;
+  font-size: 24px;
+}
+
+.emergency-description {
+  max-width: 600px;
+
+  margin: 0 auto;
+
+  color: #697386;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   BOTÓN DE EMERGENCIA
+   ========================================================= */
+
+.emergency-button {
+  position: relative;
+  overflow: hidden;
+
+  width: min(100%, 360px);
+  min-height: 110px;
+
+  margin: 24px auto 14px;
+
+  border: none;
+  border-radius: 22px;
+
+  background: #d92d20;
+  color: #ffffff;
+
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  box-shadow:
+    0 12px 30px rgba(217, 45, 32, 0.28);
+
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+
+  touch-action: none;
+  user-select: none;
+}
+
+.emergency-button:hover {
+  background: #b42318;
+  transform: translateY(-1px);
+}
+
+.emergency-button:active,
+.emergency-button-holding {
+  background: #b42318;
+
+  transform: scale(0.98);
+
+  box-shadow:
+    0 0 0 6px rgba(217, 45, 32, 0.12),
+    0 10px 26px rgba(217, 45, 32, 0.28);
+}
+
+.emergency-button span {
+  font-size: 30px;
+}
+
+.emergency-button strong {
+  font-size: 16px;
+  letter-spacing: 0.3px;
+}
+
+.emergency-button small {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.emergency-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.emergency-help {
+  max-width: 500px;
+
+  margin: 0 auto;
+
+  color: #7b8495;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   ALERTA ACTIVA
+   ========================================================= */
+
+.emergency-active {
+  border: 2px solid #d92d20;
+
+  box-shadow:
+    0 12px 30px rgba(217, 45, 32, 0.14);
+}
+
+.active-alert-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 7px 14px;
+  margin-bottom: 12px;
+
+  border-radius: 999px;
+
+  background: #fee4e2;
+  color: #b42318;
+
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+}
+
+.alert-status-box {
+  width: min(100%, 430px);
+
+  margin: 22px auto;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 10px;
+}
+
+.alert-status-box > div {
+  padding: 15px;
+
+  border-radius: 12px;
+
+  background: #f5f7fb;
+  border: 1px solid #e1e6ef;
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  text-align: left;
+}
+
+.alert-status-box span {
+  font-size: 12px;
+  color: #697386;
+}
+
+.alert-status-box strong {
+  font-size: 14px;
+  color: #172033;
+}
+
+.safe-button {
+  width: min(100%, 360px);
+  min-height: 62px;
+
+  border: none;
+  border-radius: 15px;
+
+  background: #18864b;
+  color: #ffffff;
+
+  font-size: 16px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 20px rgba(24, 134, 75, 0.18);
+}
+
+.safe-button:hover {
+  background: #13703e;
+}
+
+.safe-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   MENSAJES
+   ========================================================= */
+
+.student-alert-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  margin: 18px 0;
+
+  padding: 14px 16px;
+
+  border-radius: 12px;
+
+  background: #eaf8ef;
+  border: 1px solid #b9e6c8;
+
+  color: #176b36;
+}
+
+.student-alert-message span {
+  font-size: 16px;
+}
+
+.student-alert-message p {
+  margin: 0;
+
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.student-location-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  margin: 18px 0;
+
+  padding: 14px 16px;
+
+  border-radius: 12px;
+
+  background: #fff8d9;
+  border: 1px solid #ead68a;
+
+  color: #755d00;
+}
+
+.student-location-warning span {
+  font-size: 16px;
+}
+
+.student-location-warning p {
+  margin: 0;
+
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   INFORMACIÓN DEL ESTUDIANTE
+   ========================================================= */
+
+.student-info {
+  margin-top: 24px;
+
+  background: #ffffff;
+  border: 1px solid #e1e6ef;
+  border-radius: 16px;
+
+  overflow: hidden;
+}
+
+.info-header {
+  padding: 18px 22px;
+
+  border-bottom: 1px solid #e5e9f0;
+}
+
+.info-header h2 {
+  margin: 0;
+
+  font-size: 17px;
+  color: #172033;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.info-item {
+  padding: 17px 22px;
+
+  border-bottom: 1px solid #eef1f5;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.info-item:nth-child(odd) {
+  border-right: 1px solid #eef1f5;
+}
+
+.info-item:nth-last-child(-n + 2) {
+  border-bottom: none;
+}
+
+.info-item span {
+  font-size: 12px;
+  color: #7a8496;
+}
+
+.info-item strong {
+  font-size: 14px;
+  color: #172033;
+}
+
+
+/* =========================================================
+   NOTA DE SEGURIDAD
+   ========================================================= */
+
+.student-security-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  margin-top: 18px;
+  padding: 14px 16px;
+
+  border-radius: 12px;
+
+  background: #f4f7fb;
+  border: 1px solid #dfe5ef;
+}
+
+.student-security-note span {
+  font-size: 16px;
+}
+
+.student-security-note p {
+  margin: 0;
+
+  color: #596579;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   CARGANDO
+   ========================================================= */
+
+.student-loading-page {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #f5f7fb;
+}
+
+.student-loading-card {
+  width: min(90%, 360px);
+
+  padding: 35px;
+
+  background: #ffffff;
+  border: 1px solid #e1e6ef;
+  border-radius: 16px;
+
+  text-align: center;
+
+  box-shadow: 0 8px 25px rgba(23, 32, 51, 0.06);
+}
+
+.student-loading-icon {
+  font-size: 35px;
+  margin-bottom: 12px;
+}
+
+.student-loading-card p {
+  margin: 0;
+
+  color: #596579;
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.student-error-page {
+  min-height: 100vh;
+
+  padding: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #f5f7fb;
+}
+
+.student-error-card {
+  width: min(90%, 480px);
+
+  padding: 35px;
+
+  background: #ffffff;
+  border: 1px solid #e1e6ef;
+  border-radius: 16px;
+
+  text-align: center;
+
+  box-shadow: 0 8px 25px rgba(23, 32, 51, 0.06);
+}
+
+.student-error-icon {
+  font-size: 35px;
+  margin-bottom: 12px;
+}
+
+.student-error-card h1 {
+  margin: 0 0 10px;
+
+  font-size: 22px;
+  color: #172033;
+}
+
+.student-error-card p {
+  margin: 0 0 20px;
+
+  color: #697386;
+
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.student-back-button {
+  border: none;
+  border-radius: 9px;
+
+  padding: 10px 18px;
+
+  background: #3567d6;
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.student-back-button:hover {
+  background: #2855b8;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .student-header {
+    min-height: 70px;
+    padding: 0 16px;
+  }
+
+  .student-brand span {
+    display: none;
+  }
+
+  .student-logout {
+    padding: 8px 10px;
+  }
+
+  .student-content {
+    width: min(100% - 24px, 900px);
+    padding: 28px 0 40px;
+  }
+
+  .student-welcome h1 {
+    font-size: 27px;
+  }
+
+  .student-welcome p:last-child {
+    font-size: 14px;
+  }
+
+  .emergency-card {
+    padding: 28px 18px;
+    border-radius: 16px;
+  }
+
+  .emergency-card h2 {
+    font-size: 21px;
+  }
+
+  .emergency-button {
+    width: 100%;
+    min-height: 120px;
+  }
+
+  .safe-button {
+    width: 100%;
+  }
+
+  .alert-status-box {
+    grid-template-columns: 1fr;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-item {
+    border-right: none !important;
+  }
+
+  .info-item:nth-last-child(-n + 2) {
+    border-bottom: 1px solid #eef1f5;
+  }
+
+  .info-item:last-child {
+    border-bottom: none;
+  }
+}
+
+@media (max-width: 420px) {
+
+  .student-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .student-brand strong {
+    font-size: 16px;
+  }
+
+  .student-welcome h1 {
+    font-size: 24px;
+  }
+
+  .emergency-icon {
+    width: 55px;
+    height: 55px;
+    font-size: 27px;
+  }
+
+  .emergency-button strong {
+    font-size: 14px;
+  }
+}
+/* =========================================================
+   CONTACTOS DE EMERGENCIA
+========================================================= */
+
+.emergency-contacts-section {
+  margin-top: 20px;
+}
+
+.emergency-contacts-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.contacts-description {
+  margin-top: 6px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.add-contact-button {
+  border: 0;
+  border-radius: 9px;
+  padding: 11px 16px;
+  background: #2563eb;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.add-contact-button:hover {
+  background: #1d4ed8;
+}
+
+.contacts-loading {
+  padding: 30px 10px;
+  text-align: center;
+  color: #64748b;
+}
+
+.contacts-empty {
+  padding: 35px 20px;
+  text-align: center;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.contacts-empty-icon {
+  font-size: 34px;
+  margin-bottom: 10px;
+}
+
+.contacts-empty h3 {
+  margin-bottom: 8px;
+  color: #172033;
+  font-size: 17px;
+}
+
+.contacts-empty p {
+  max-width: 520px;
+  margin: 0 auto 18px;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.contacts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.emergency-contact-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 17px;
+  border: 1px solid #e2e8f0;
+  border-radius: 13px;
+  background: #fff;
+}
+
+.emergency-contact-card.primary-contact {
+  border-color: #93c5fd;
+  background: #f8fbff;
+}
+
+.contact-main {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-width: 0;
+}
+
+.contact-avatar {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #eff6ff;
+  font-size: 20px;
+}
+
+.contact-data {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.contact-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.contact-name-row strong {
+  color: #172033;
+  font-size: 15px;
+}
+
+.primary-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.contact-relationship {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.contact-phone {
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.contact-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.contact-action {
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  padding: 7px 10px;
+  background: white;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.contact-action:hover {
+  background: #f8fafc;
+}
+
+.contact-action.secondary {
+  color: #2563eb;
+  border-color: #bfdbfe;
+}
+
+.contact-action.danger {
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.contact-action.danger:hover {
+  background: #fef2f2;
+}
+
+.contacts-limit {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f0fdf4;
+  color: #166534;
+  font-size: 13px;
+}
+
+.contact-success,
+.contact-error {
+  margin-top: 12px;
+  padding: 11px 13px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.contact-success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.contact-error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* =========================================================
+   MODAL CONTACTO
+========================================================= */
+
+.contact-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.58);
+}
+
+.contact-modal {
+  width: 100%;
+  max-width: 520px;
+  max-height: 92vh;
+  overflow-y: auto;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.contact-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 22px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.contact-modal-header h2 {
+  margin-top: 3px;
+  color: #172033;
+}
+
+.contact-modal-close {
+  border: 0;
+  background: transparent;
+  color: #64748b;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.contact-form {
+  padding: 23px 24px 25px;
+}
+
+.contact-form-group {
+  margin-bottom: 17px;
+}
+
+.contact-form-group label {
+  display: block;
+  margin-bottom: 7px;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.contact-form-group input,
+.contact-form-group select {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  outline: none;
+  background: white;
+  color: #172033;
+  font-size: 14px;
+}
+
+.contact-form-group input:focus,
+.contact-form-group select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.primary-contact-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 8px 0 18px;
+  color: #334155;
+  font-size: 13px;
+}
+
+.primary-contact-checkbox input {
+  width: 17px;
+  height: 17px;
+}
+
+.contact-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 23px;
+}
+
+.contact-cancel-button,
+.contact-save-button {
+  min-width: 125px;
+  height: 43px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.contact-cancel-button {
+  border: 1px solid #cbd5e1;
+  background: white;
+  color: #334155;
+}
+
+.contact-save-button {
+  border: 0;
+  background: #2563eb;
+  color: white;
+}
+
+.contact-save-button:hover {
+  background: #1d4ed8;
+}
+
+.contact-cancel-button:disabled,
+.contact-save-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 700px) {
+  .emergency-contacts-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .add-contact-button {
+    width: 100%;
+  }
+
+  .emergency-contact-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .contact-actions {
+    justify-content: flex-start;
+  }
+
+  .contact-action {
+    flex: 1;
+  }
+
+  .contact-modal-overlay {
+    padding: 12px;
+  }
+
+  .contact-modal-header,
+  .contact-form {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .contact-form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .contact-cancel-button,
+  .contact-save-button {
+    width: 100%;
+  }
+}
