@@ -16,6 +16,12 @@ function Student() {
   const [alertMessage, setAlertMessage] = useState('')
   const [locationWarning, setLocationWarning] = useState('')
 
+  // VEHÍCULO / PLACA
+  const [transportType, setTransportType] = useState('combi')
+  const [vehiclePlate, setVehiclePlate] = useState('')
+  const [vehicleLookupMessage, setVehicleLookupMessage] = useState('')
+  const [selectedBus, setSelectedBus] = useState(null)
+
   // WHATSAPP DE EMERGENCIA
   const [whatsappLinks, setWhatsappLinks] = useState([])
 
@@ -585,6 +591,91 @@ function Student() {
     setHoldProgress(0)
   }
 
+  function normalizePlate(value) {
+    return String(value || '')
+      .trim()
+      .toUpperCase()
+      .replace(/\s+/g, '')
+  }
+
+  async function findVehicleByPlate() {
+    const plate = normalizePlate(vehiclePlate)
+
+    setSelectedBus(null)
+    setVehicleLookupMessage('')
+
+    if (!plate) {
+      return null
+    }
+
+    try {
+      const { data, error: busError } = await supabase
+        .from('buses')
+        .select(`
+          id,
+          code,
+          plate,
+          transport_type,
+          route,
+          operator_name,
+          active
+        `)
+        .eq('active', true)
+        .eq('plate', plate)
+        .maybeSingle()
+
+      if (busError) {
+        console.warn(
+          'No se pudo consultar la placa:',
+          busError
+        )
+
+        setVehicleLookupMessage(
+          'No se pudo verificar la placa. La alerta continuará igualmente.'
+        )
+
+        return null
+      }
+
+      if (!data) {
+        setVehicleLookupMessage(
+          'Vehículo no registrado. La alerta continuará igualmente y se enviará a tus contactos.'
+        )
+
+        return null
+      }
+
+      setSelectedBus(data)
+      setVehicleLookupMessage(
+        `Vehículo identificado: ${data.plate}${data.operator_name ? ` · ${data.operator_name}` : ''}.`
+      )
+
+      return data
+    } catch (err) {
+      console.warn(
+        'Error consultando vehículo:',
+        err
+      )
+
+      setVehicleLookupMessage(
+        'No se pudo verificar la placa. La alerta continuará igualmente.'
+      )
+
+      return null
+    }
+  }
+
+  function handlePlateChange(event) {
+    const value = event.target.value
+      .toUpperCase()
+      .replace(/\s+/g, '')
+      .replace(/[^A-Z0-9-]/g, '')
+
+    setVehiclePlate(value)
+    setSelectedBus(null)
+    setVehicleLookupMessage('')
+  }
+
   async function getCurrentLocation() {
     if (!navigator.geolocation) {
       return null
@@ -639,7 +730,7 @@ function Student() {
     const links = contacts
       .filter((contact) => contact?.phone)
       .map((contact) => {
-        const digits = String(contact.phone).replace(/\\D/g, '')
+        const digits = String(contact.phone).replace(/\D/g, '')
         const normalizedPhone =
           digits.length === 9 ? `51${digits}` : digits
 
@@ -670,6 +761,9 @@ function Student() {
     try {
       console.log('=== SAFEBUS: ACTIVANDO EMERGENCIA ===')
       console.log('Estudiante:', student?.id)
+
+      // La placa es opcional. Si existe, intentamos identificar el vehículo.
+      const bus = await findVehicleByPlate()
 
       const position =
         await getCurrentLocation()
@@ -704,6 +798,14 @@ function Student() {
         .from('alerts')
         .insert({
           student_id: student.id,
+          bus_id: bus?.id || null,
+          transport_type: transportType || bus?.transport_type || null,
+          vehicle_description: bus
+            ? `${bus.plate}${bus.operator_name ? ` · ${bus.operator_name}` : ''}`
+            : vehiclePlate.trim()
+              ? `Placa declarada: ${normalizePlate(vehiclePlate)}`
+              : null,
+          route_description: bus?.route || null,
           type: 'emergency',
           status: 'active',
           message:
@@ -1023,6 +1125,9 @@ function Student() {
 
     setActiveAlert(null)
     setWhatsappLinks([])
+    setSelectedBus(null)
+    setVehiclePlate('')
+    setVehicleLookupMessage('')
 
     setAlertMessage(
       'Alerta finalizada. Se registró que estás a salvo.'
@@ -1163,6 +1268,83 @@ function Student() {
               tienes una emergencia o necesitas
               ayuda, activa una alerta.
             </p>
+
+            <div className="vehicle-identification-box">
+              <div className="vehicle-identification-header">
+                <div>
+                  <strong>¿En qué vehículo estás?</strong>
+                  <p>
+                    Si conoces la placa, SafeBus podrá identificar
+                    la unidad y posteriormente avisar al conductor.
+                  </p>
+                </div>
+                <span>🚌</span>
+              </div>
+
+              <div className="vehicle-form-grid">
+                <div className="vehicle-form-group">
+                  <label htmlFor="transportType">
+                    Tipo de transporte
+                  </label>
+                  <select
+                    id="transportType"
+                    value={transportType}
+                    onChange={(event) =>
+                      setTransportType(event.target.value)
+                    }
+                    disabled={alertLoading}
+                  >
+                    <option value="combi">Combi</option>
+                    <option value="bus">Bus</option>
+                    <option value="sit">SIT</option>
+                    <option value="taxi">Taxi</option>
+                    <option value="other">Otro</option>
+                  </select>
+                </div>
+
+                <div className="vehicle-form-group">
+                  <label htmlFor="vehiclePlate">
+                    Placa del vehículo <span>(opcional)</span>
+                  </label>
+                  <input
+                    id="vehiclePlate"
+                    type="text"
+                    value={vehiclePlate}
+                    onChange={handlePlateChange}
+                    placeholder="Ej. V8A-123"
+                    maxLength={10}
+                    autoCapitalize="characters"
+                    disabled={alertLoading}
+                  />
+                </div>
+              </div>
+
+              {vehiclePlate.trim() && !alertLoading && (
+                <button
+                  type="button"
+                  className="vehicle-check-button"
+                  onClick={findVehicleByPlate}
+                >
+                  Verificar placa
+                </button>
+              )}
+
+              {vehicleLookupMessage && (
+                <div
+                  className={`vehicle-lookup-message ${
+                    selectedBus
+                      ? 'vehicle-lookup-success'
+                      : 'vehicle-lookup-info'
+                  }`}
+                >
+                  {selectedBus ? '✓' : 'ℹ️'} {vehicleLookupMessage}
+                </div>
+              )}
+
+              <small className="vehicle-optional-note">
+                No conocer la placa no impide activar la emergencia.
+              </small>
+            </div>
 
             <button
               className={`emergency-button ${
