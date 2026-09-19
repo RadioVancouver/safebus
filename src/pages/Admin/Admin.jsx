@@ -34,6 +34,11 @@ function Admin() {
     navigate('/admin/familiares')
   }
 
+  function goToAlerts() {
+    setMenuOpen(false)
+    navigate('/admin/alertas')
+  }
+
   return (
     <main className="admin-layout">
 
@@ -103,8 +108,10 @@ function Admin() {
             Familiares
           </button>
 
+          {/* ALERTAS */}
           <button
             className="nav-item"
+            onClick={goToAlerts}
           >
             Alertas
           </button>
@@ -240,6 +247,7 @@ function Admin() {
 
           <article
             className="dashboard-card alert-card"
+            onClick={goToAlerts}
             style={{ cursor: 'pointer' }}
           >
 

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Intro from './pages/Intro/Intro'
 import Login from './pages/Login/Login'
 import Admin from './pages/Admin/Admin'
+import AdminAlerts from './pages/AdminAlerts/AdminAlerts'
 import Students from './pages/Students/Students'
 import Drivers from './pages/Drivers/Drivers'
 import Buses from './pages/buses/Buses'
@@ -26,8 +27,10 @@ function App() {
         <Route path="/login" element={<Login />} />
 
         {/* MAPA PÚBLICO DE ALERTA */}
-        <Route path="/alerta/:token" element={<AlertShare />} />
-
+        <Route
+          path="/alerta/:token"
+          element={<AlertShare />}
+        />
 
         {/* =========================
             PORTAL ADMINISTRADOR
@@ -38,6 +41,16 @@ function App() {
           element={
             <ProtectedRoute allowedRole="admin">
               <Admin />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ALERTAS DE EMERGENCIA */}
+        <Route
+          path="/admin/alertas"
+          element={
+            <ProtectedRoute allowedRole="admin">
+              <AdminAlerts />
             </ProtectedRoute>
           }
         />
@@ -82,7 +95,6 @@ function App() {
           }
         />
 
-
         {/* =========================
             PORTAL ESTUDIANTE
            ========================= */}
@@ -95,7 +107,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
 
         {/* =========================
             PORTAL CONDUCTOR
