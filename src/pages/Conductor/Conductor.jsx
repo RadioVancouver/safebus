@@ -213,13 +213,6 @@ function Conductor() {
 
       setLastAlertId(newest.id)
       lastAlertIdRef.current = newest.id
-      setMessage('Hay una nueva alerta de emergencia asignada a tu vehículo.')
-
-      if (notificationsEnabledRef.current) {
-        await notifyNewAlert()
-      } else if ('vibrate' in navigator) {
-        navigator.vibrate([300, 100, 300, 100, 500])
-      }
     } else if (enriched.length > 0 && !lastAlertIdRef.current) {
       const newestId = enriched[0].id
       setLastAlertId(newestId)
@@ -256,7 +249,38 @@ function Conductor() {
       .on(
         'postgres_changes',
         {
-          event: '*',
+          event: 'INSERT',
+          schema: 'public',
+          table: 'alerts',
+          filter: `driver_id=eq.${driverId}`
+        },
+        async (payload) => {
+          try {
+            console.log('NUEVA ALERTA RECIBIDA:', payload.new)
+
+            // Primero actualizamos la pantalla.
+            await loadActiveAlerts(driverId)
+
+            // El INSERT ya fue filtrado por driver_id, por lo que
+            // esta alerta corresponde al conductor conectado.
+            setMessage(
+              'ALERTA DE EMERGENCIA RECIBIDA. Atiende al estudiante.'
+            )
+
+            if (notificationsEnabledRef.current) {
+              await notifyNewAlert()
+            } else if ('vibrate' in navigator) {
+              navigator.vibrate([400, 120, 400, 120, 700])
+            }
+          } catch (err) {
+            console.error('Error procesando nueva alerta:', err)
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
           schema: 'public',
           table: 'alerts',
           filter: `driver_id=eq.${driverId}`
@@ -265,7 +289,7 @@ function Conductor() {
           try {
             await loadActiveAlerts(driverId)
           } catch (err) {
-            console.error('Error actualizando alertas:', err)
+            console.error('Error actualizando alerta:', err)
           }
         }
       )
