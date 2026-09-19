@@ -1,123 +1,104 @@
 /* =========================================================
-   SAFEBUS — ALERT SHARE / SEGUIMIENTO DE EMERGENCIA
-   Responsive + mapa protagonista
+   SAFEBUS — ALERT SHARE
+   CSS compatible with AlertShare.jsx actual
+   Mapa protagonista + responsive
    ========================================================= */
 
-.alert-share-page,
-.alert-share-page * {
+.share-page {
+  min-height: 100vh;
+  padding: 28px 28px 45px;
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, .07), transparent 32%),
+    #f4f7fb;
+  color: #172033;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   box-sizing: border-box;
 }
 
-.alert-share-page {
-  min-height: 100vh;
-  width: 100%;
-  margin: 0;
-  padding: 28px 22px 44px;
-  background:
-    radial-gradient(circle at top left, rgba(37, 99, 235, 0.07), transparent 34%),
-    #f3f6fa;
-  color: #172033;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+.share-page *,
+.share-page *::before,
+.share-page *::after {
+  box-sizing: border-box;
 }
 
-.alert-share-shell {
-  width: min(1180px, 100%);
-  margin: 0 auto;
-}
-
-/* =========================================================
-   HEADER
-   ========================================================= */
-
-.alert-share-header {
+/* HEADER */
+.share-header {
+  width: min(1280px, 100%);
+  margin: 0 auto 18px;
+  padding: 16px 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-
-  padding: 17px 21px;
-  margin-bottom: 18px;
-
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid #dfe6ef;
-  border-radius: 18px;
-
-  box-shadow: 0 10px 30px rgba(16, 24, 40, 0.07);
+  background: rgba(255, 255, 255, .97);
+  border: 1px solid #dce4ef;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(15, 23, 42, .06);
 }
 
-.alert-share-header.active {
-  border-color: #f0c4c4;
-  box-shadow: 0 10px 30px rgba(180, 35, 24, 0.07);
-}
-
-.alert-share-header.closed {
-  border-color: #bfe3cc;
-}
-
-.alert-share-brand {
+.share-brand {
   display: flex;
   align-items: center;
   gap: 12px;
-  min-width: 0;
 }
 
-.alert-share-brand-icon {
-  width: 50px;
-  height: 50px;
-  flex: 0 0 50px;
-
+.share-logo {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
   display: grid;
   place-items: center;
-
-  border-radius: 14px;
-  background: #edf3fa;
-
-  font-size: 25px;
+  border-radius: 13px;
+  background: #edf3ff;
+  font-size: 24px;
 }
 
-.alert-share-brand-name {
+.share-brand strong {
+  display: block;
   color: #172033;
-  font-size: 21px;
+  font-size: 20px;
   line-height: 1.1;
   font-weight: 850;
-  letter-spacing: -0.02em;
+  letter-spacing: .02em;
 }
 
-.alert-share-brand-subtitle {
+.share-brand span {
+  display: block;
   margin-top: 4px;
-  color: #667085;
+  color: #64748b;
   font-size: 13px;
 }
 
-.alert-share-status {
+/* MAIN */
+.share-content {
+  width: min(1280px, 100%);
+  margin: 0 auto;
+}
+
+.share-status {
+  width: fit-content;
+  min-height: 35px;
+  margin: 0 auto 14px;
+  padding: 0 15px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-
-  min-height: 38px;
-  padding: 0 14px;
-
   border-radius: 999px;
-
   font-size: 12px;
   font-weight: 850;
-  letter-spacing: 0.03em;
-  white-space: nowrap;
+  letter-spacing: .04em;
 }
 
-.alert-share-status.active {
+.share-status-active {
   background: #fff0f0;
   color: #b42318;
 }
 
-.alert-share-status.closed {
+.share-status-closed {
   background: #ecfdf3;
   color: #027a48;
 }
 
-.alert-share-status-dot {
+.share-status-dot {
   width: 9px;
   height: 9px;
   flex: 0 0 9px;
@@ -125,568 +106,426 @@
   background: currentColor;
 }
 
-.alert-share-status.active .alert-share-status-dot {
-  animation: alert-share-pulse 1.6s infinite;
+.share-status-active .share-status-dot {
+  animation: share-pulse 1.5s infinite;
 }
 
-/* =========================================================
-   MAIN CARD
-   ========================================================= */
+.share-content > h1 {
+  margin: 0;
+  color: #172033;
+  text-align: center;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.1;
+  letter-spacing: -.035em;
+}
 
-.alert-share-card {
-  background: #ffffff;
+.share-intro {
+  width: min(720px, 100%);
+  margin: 10px auto 22px;
+  color: #64748b;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+/* INFO */
+.share-info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.share-info-item {
+  min-width: 0;
+  padding: 15px 16px;
+  background: #fff;
   border: 1px solid #dfe6ef;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(16, 24, 40, 0.06);
+  border-radius: 13px;
+  box-shadow: 0 5px 17px rgba(15, 23, 42, .045);
 }
 
-.alert-share-main {
-  padding: 23px;
+.share-info-item span {
+  display: block;
+  margin-bottom: 6px;
+  color: #667085;
+  font-size: 11px;
+  font-weight: 650;
 }
 
-/* =========================================================
-   STUDENT
-   ========================================================= */
+.share-info-item strong {
+  display: block;
+  color: #172033;
+  font-size: 14px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
 
-.alert-share-student {
+/* MAP CARD */
+.share-map-card {
+  width: 100%;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #d7e0eb;
+  border-radius: 18px;
+  box-shadow:
+    0 14px 35px rgba(15, 23, 42, .09),
+    0 3px 8px rgba(15, 23, 42, .04);
+}
+
+.share-map-header {
+  min-height: 78px;
+  padding: 16px 19px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 15px;
-  margin-bottom: 15px;
+  border-bottom: 1px solid #e7edf4;
 }
 
-.alert-share-avatar {
-  width: 60px;
-  height: 60px;
-  flex: 0 0 60px;
-
-  display: grid;
-  place-items: center;
-
-  border-radius: 50%;
-  background: #eaf1fa;
-  color: #193b68;
-
-  font-size: 18px;
-  font-weight: 850;
+.share-map-header h2 {
+  margin: 0 0 4px;
+  color: #172033;
+  font-size: 20px;
+  line-height: 1.2;
 }
 
-.alert-share-label {
-  display: block;
-  margin-bottom: 3px;
+.share-map-header p {
+  margin: 0;
   color: #667085;
+  font-size: 13px;
+}
+
+.gps-pill {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid #bbf7d0;
+  border-radius: 999px;
+  background: #f0fdf4;
+  color: #15803d;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/*
+  MAPA GRANDE:
+  El iframe ocupa la mayor parte de la pantalla.
+  En escritorio: 68vh.
+  En laptop: mantiene mínimo amplio.
+*/
+.share-map {
+  display: block;
+  width: 100%;
+  height: clamp(540px, 68vh, 800px);
+  min-height: 500px;
+  border: 0;
+  background: #e8eef5;
+}
+
+/* COORDINATES */
+.share-coordinates {
+  min-height: 58px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  border-top: 1px solid #e7edf4;
+  background: #f8fafc;
+}
+
+.share-coordinates span {
+  color: #475569;
   font-size: 12px;
   font-weight: 650;
 }
 
-.alert-share-student h1 {
+.share-refresh {
   margin: 0;
-  color: #172033;
-  font-size: clamp(22px, 3vw, 30px);
-  line-height: 1.12;
-  letter-spacing: -0.025em;
-}
-
-.alert-share-student p {
-  margin: 6px 0 0;
-  color: #667085;
-  font-size: 13px;
-}
-
-/* =========================================================
-   LIVE STATUS
-   ========================================================= */
-
-.alert-share-live {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  margin-bottom: 14px;
-  padding: 12px 14px;
-
-  border: 1px solid #ccebd7;
-  border-radius: 11px;
-
-  background: #f0fdf4;
-  color: #087443;
-
-  font-size: 13px;
-  font-weight: 750;
-}
-
-.alert-share-live-dot {
-  width: 9px;
-  height: 9px;
-  flex: 0 0 9px;
-
-  border-radius: 50%;
-  background: #16a34a;
-
-  box-shadow: 0 0 0 5px rgba(22, 163, 74, 0.1);
-  animation: alert-share-pulse-green 1.8s infinite;
-}
-
-/* =========================================================
-   MAPA — PROTAGONISTA
-   ========================================================= */
-
-.alert-share-map-wrap {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-
-  border: 1px solid #cfd9e6;
-  border-radius: 18px;
-
-  background: #e9eef4;
-
-  box-shadow:
-    0 12px 28px rgba(15, 23, 42, 0.10),
-    0 2px 6px rgba(15, 23, 42, 0.05);
-}
-
-/*
-  El mapa ocupa la mayor parte de la pantalla.
-  Se adapta al tamaño del dispositivo:
-  - escritorio: grande
-  - portátil: aproximadamente 60% de la altura
-  - móvil: también mantiene una zona amplia para visualizar la ubicación
-*/
-.alert-share-map {
-  width: 100%;
-  height: clamp(520px, 68vh, 760px);
-  min-height: 500px;
-}
-
-.alert-share-map .leaflet-container {
-  width: 100%;
-  height: 100%;
-  font-family: inherit;
-}
-
-.alert-share-map .leaflet-control-zoom {
-  margin: 14px !important;
-}
-
-.alert-share-map .leaflet-control-zoom a {
-  width: 38px !important;
-  height: 38px !important;
-  line-height: 38px !important;
-  font-size: 21px !important;
-}
-
-.alert-share-map .leaflet-control-attribution {
-  padding: 2px 5px;
-  font-size: 9px;
-}
-
-.alert-share-map-empty {
-  position: absolute;
-  inset: 0;
-  z-index: 500;
-
-  display: grid;
-  place-items: center;
-
-  padding: 25px;
-
-  background: rgba(255, 255, 255, 0.88);
-  color: #475467;
-
+  padding: 8px 18px 14px;
+  color: #64748b;
   text-align: center;
-  font-size: 14px;
-  font-weight: 750;
-}
-
-/* =========================================================
-   LOCATION INFO
-   ========================================================= */
-
-.alert-share-location-info {
-  margin-top: 14px;
-  padding: 16px;
-
-  border: 1px solid #dfe6ef;
-  border-radius: 14px;
-
-  background: #f8fafc;
-}
-
-.alert-share-location-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  margin-bottom: 13px;
-
-  color: #172033;
-  font-size: 14px;
-}
-
-.alert-share-location-title span {
-  font-size: 18px;
-}
-
-.alert-share-location-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 12px;
-}
-
-.alert-share-location-grid div {
-  min-width: 0;
-
-  padding: 12px;
-
-  border: 1px solid #e8edf3;
-  border-radius: 10px;
-
-  background: #ffffff;
-}
-
-.alert-share-location-grid span {
-  display: block;
-  margin-bottom: 5px;
-
-  color: #667085;
   font-size: 11px;
 }
 
-.alert-share-location-grid strong {
-  display: block;
-
-  color: #172033;
-  font-size: 14px;
-  line-height: 1.4;
-
-  overflow-wrap: anywhere;
-}
-
-.alert-share-refreshing {
-  margin-top: 10px;
-  color: #667085;
-  font-size: 12px;
+/* NO LOCATION */
+.share-no-location {
+  padding: 60px 25px;
   text-align: center;
+  background: #fff;
+  border: 1px solid #dfe6ef;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(15, 23, 42, .05);
 }
 
-/* =========================================================
-   DETAILS
-   ========================================================= */
-
-.alert-share-details {
-  margin-top: 18px;
-  padding: 21px 23px;
+.share-no-location > div {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 15px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff7ed;
+  font-size: 27px;
 }
 
-.alert-share-details h2 {
-  margin: 0 0 14px;
+.share-no-location h2 {
+  margin: 0 0 7px;
   color: #172033;
-  font-size: 19px;
+  font-size: 21px;
 }
 
-.alert-share-detail-row {
+.share-no-location p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+/* SECURITY */
+.share-security {
+  margin-top: 16px;
+  padding: 15px 17px;
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
-
-  padding: 12px 0;
-
-  border-bottom: 1px solid #edf0f5;
-}
-
-.alert-share-detail-row:last-child {
-  border-bottom: 0;
-}
-
-.alert-share-detail-row span {
-  color: #667085;
-  font-size: 14px;
-}
-
-.alert-share-detail-row strong {
-  color: #172033;
-  font-size: 14px;
-  text-align: right;
-}
-
-/* =========================================================
-   SECURITY
-   ========================================================= */
-
-.alert-share-security {
-  margin-top: 18px;
-  padding: 16px 18px;
-
-  border: 1px solid #dbe4ef;
-  border-radius: 14px;
-
+  align-items: flex-start;
+  gap: 10px;
   background: #f8fafc;
-  color: #475467;
+  border: 1px solid #dce4ed;
+  border-radius: 13px;
+  color: #64748b;
+}
 
+.share-security > span {
+  flex: 0 0 auto;
+  font-size: 16px;
+}
+
+.share-security p {
+  margin: 0;
   font-size: 12px;
   line-height: 1.55;
 }
 
-.alert-share-security strong {
-  display: block;
-  margin-bottom: 4px;
-  color: #344054;
-}
-
-.alert-share-security p {
-  margin: 0;
-}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
-.alert-share-footer {
-  padding: 19px 0 0;
-
-  color: #98a2b3;
+/* LOADING / ERROR */
+.share-card {
+  width: min(500px, calc(100% - 30px));
+  margin: 12vh auto 0;
+  padding: 42px 30px;
   text-align: center;
-
-  font-size: 11px;
+  background: #fff;
+  border: 1px solid #dfe6ef;
+  border-radius: 18px;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, .08);
 }
 
-/* =========================================================
-   LOADING / ERROR
-   ========================================================= */
-
-.alert-share-loading,
-.alert-share-error {
-  width: min(560px, 100%);
-  margin: 10vh auto 0;
-  padding: 44px 25px;
-  text-align: center;
-}
-
-.alert-share-icon {
-  width: 68px;
-  height: 68px;
-
-  display: grid;
-  place-items: center;
-
-  margin: 0 auto 17px;
-
-  border-radius: 50%;
-  background: #edf4ff;
-
-  font-size: 29px;
-}
-
-.alert-share-loading h1,
-.alert-share-error h1 {
-  margin: 0 0 8px;
-  color: #172033;
-  font-size: 26px;
-}
-
-.alert-share-loading p,
-.alert-share-error p {
-  margin: 0;
-  color: #667085;
+.share-loading p,
+.share-error p {
+  margin: 10px 0 0;
+  color: #64748b;
   line-height: 1.5;
 }
 
-.alert-share-spinner {
-  width: 32px;
-  height: 32px;
-
-  margin: 21px auto 0;
-
-  border: 3px solid #d9e2ef;
-  border-top-color: #193b68;
-  border-radius: 50%;
-
-  animation: alert-share-spin 0.8s linear infinite;
+.share-loading h1,
+.share-error h1 {
+  margin: 0;
+  color: #172033;
+  font-size: 27px;
 }
 
-.alert-share-icon-error {
+.share-error small {
+  display: block;
+  margin-top: 15px;
+  color: #98a2b3;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.share-badge-error {
+  width: fit-content;
+  margin: 0 auto 12px;
+  padding: 7px 11px;
+  border-radius: 999px;
   background: #fff0f0;
   color: #b42318;
-  font-size: 28px;
-  font-weight: 900;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .05em;
 }
 
-/* =========================================================
-   ANIMACIONES
-   ========================================================= */
-
-@keyframes alert-share-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes alert-share-pulse {
+/* ANIMATION */
+@keyframes share-pulse {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(180, 35, 24, 0.25);
+    box-shadow: 0 0 0 0 rgba(180, 35, 24, .25);
   }
   50% {
     box-shadow: 0 0 0 7px rgba(180, 35, 24, 0);
   }
 }
 
-@keyframes alert-share-pulse-green {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.20);
-  }
-  50% {
-    box-shadow: 0 0 0 7px rgba(22, 163, 74, 0);
-  }
-}
-
-/* =========================================================
-   TABLET
-   ========================================================= */
-
-@media (max-width: 900px) {
-  .alert-share-page {
-    padding: 20px 15px 35px;
+/* TABLET */
+@media (max-width: 950px) {
+  .share-page {
+    padding: 20px 16px 35px;
   }
 
-  .alert-share-shell {
-    width: 100%;
+  .share-info-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .alert-share-map {
-    height: clamp(500px, 62vh, 650px);
-    min-height: 470px;
+  .share-map {
+    height: 64vh;
+    min-height: 500px;
   }
 }
 
-/* =========================================================
-   CELULAR
-   ========================================================= */
-
-@media (max-width: 700px) {
-  .alert-share-page {
+/* MOBILE */
+@media (max-width: 650px) {
+  .share-page {
     padding: 8px 8px 25px;
   }
 
-  .alert-share-header {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 12px;
-
-    padding: 14px;
+  .share-header {
     margin-bottom: 10px;
-
-    border-radius: 15px;
+    padding: 13px 14px;
+    border-radius: 14px;
   }
 
-  .alert-share-status {
-    width: 100%;
+  .share-logo {
+    width: 43px;
+    height: 43px;
+    flex-basis: 43px;
+    font-size: 21px;
   }
 
-  .alert-share-main {
-    padding: 12px;
-    border-radius: 16px;
+  .share-brand strong {
+    font-size: 18px;
   }
 
-  .alert-share-student {
-    gap: 11px;
-    margin-bottom: 12px;
-  }
-
-  .alert-share-avatar {
-    width: 50px;
-    height: 50px;
-    flex-basis: 50px;
-    font-size: 15px;
-  }
-
-  .alert-share-student h1 {
-    font-size: 20px;
-  }
-
-  .alert-share-student p {
+  .share-brand span {
     font-size: 12px;
   }
 
-  .alert-share-live {
+  .share-status {
     margin-bottom: 10px;
-    padding: 10px 12px;
+  }
+
+  .share-content > h1 {
+    font-size: 27px;
+    line-height: 1.12;
+  }
+
+  .share-intro {
+    margin-top: 8px;
+    margin-bottom: 13px;
     font-size: 12px;
+  }
+
+  .share-info-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .share-info-item {
+    padding: 11px 12px;
+    border-radius: 10px;
+  }
+
+  .share-info-item span {
+    font-size: 10px;
+  }
+
+  .share-info-item strong {
+    font-size: 12px;
+  }
+
+  .share-map-card {
+    border-radius: 14px;
+  }
+
+  .share-map-header {
+    min-height: 68px;
+    padding: 12px 13px;
+  }
+
+  .share-map-header h2 {
+    font-size: 17px;
+  }
+
+  .share-map-header p {
+    font-size: 11px;
+  }
+
+  .gps-pill {
+    min-height: 30px;
+    padding: 0 9px;
+    font-size: 10px;
   }
 
   /*
-    En móvil el mapa sigue siendo el elemento dominante.
-    Se aprovecha gran parte de la pantalla vertical.
+    El mapa continúa siendo la parte principal en celular.
   */
-  .alert-share-map-wrap {
-    border-radius: 13px;
-  }
-
-  .alert-share-map {
+  .share-map {
     height: 62vh;
     min-height: 430px;
-    max-height: 620px;
+    max-height: 650px;
   }
 
-  .alert-share-location-grid {
-    grid-template-columns: 1fr;
+  .share-coordinates {
+    padding: 10px 11px;
+    gap: 5px 12px;
+    justify-content: flex-start;
   }
 
-  .alert-share-location-info {
+  .share-coordinates span {
+    font-size: 10.5px;
+  }
+
+  .share-refresh {
+    padding: 7px 10px 11px;
+    font-size: 10px;
+  }
+
+  .share-security {
     margin-top: 10px;
-    padding: 13px;
+    padding: 12px 13px;
   }
 
-  .alert-share-details {
-    padding: 16px;
-    border-radius: 16px;
-  }
-
-  .alert-share-detail-row {
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .alert-share-detail-row strong {
-    text-align: left;
-  }
-
-  .alert-share-security {
-    margin-top: 12px;
+  .share-security p {
+    font-size: 10.5px;
   }
 }
 
-/* =========================================================
-   CELULAR PEQUEÑO
-   ========================================================= */
-
+/* SMALL MOBILE */
 @media (max-width: 430px) {
-  .alert-share-brand-icon {
-    width: 44px;
-    height: 44px;
-    flex-basis: 44px;
-    font-size: 22px;
+  .share-page {
+    padding-left: 6px;
+    padding-right: 6px;
   }
 
-  .alert-share-brand-name {
-    font-size: 19px;
+  .share-info-grid {
+    grid-template-columns: 1fr;
   }
 
-  .alert-share-brand-subtitle {
-    font-size: 12px;
+  .share-content > h1 {
+    font-size: 24px;
   }
 
-  .alert-share-map {
+  .share-map {
     height: 60vh;
     min-height: 390px;
-    max-height: 540px;
+    max-height: 560px;
   }
 
-  .alert-share-live {
-    font-size: 11.5px;
+  .share-map-header {
+    align-items: flex-start;
   }
 
-  .alert-share-location-grid strong {
-    font-size: 13px;
+  .share-map-header p {
+    max-width: 210px;
   }
 }
