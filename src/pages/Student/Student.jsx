@@ -786,22 +786,18 @@ function Student() {
       let assignedDriverId = null
 
       if (bus?.id) {
-        const { data: driverAssignment, error: driverAssignmentError } =
-          await supabase
-            .from('driver_vehicle_assignments')
-            .select('driver_id')
-            .eq('bus_id', bus.id)
-            .eq('active', true)
-            .is('ended_at', null)
-            .maybeSingle()
+        const { data: driverId, error: driverAssignmentError } =
+          await supabase.rpc('get_active_driver_for_bus', {
+            p_bus_id: bus.id,
+          })
 
         if (driverAssignmentError) {
           console.warn(
             'No se pudo consultar el conductor del vehículo:',
             driverAssignmentError
           )
-        } else if (driverAssignment?.driver_id) {
-          assignedDriverId = driverAssignment.driver_id
+        } else if (driverId) {
+          assignedDriverId = driverId
         }
       }
 
