@@ -780,6 +780,31 @@ function Student() {
       // seleccionó una unidad registrada en la lista.
       const bus = selectedBus
 
+      // Si el estudiante seleccionó un vehículo registrado,
+      // buscamos al conductor que actualmente lo tiene asignado.
+      // Si no hay conductor, la alerta continúa funcionando.
+      let assignedDriverId = null
+
+      if (bus?.id) {
+        const { data: driverAssignment, error: driverAssignmentError } =
+          await supabase
+            .from('driver_vehicle_assignments')
+            .select('driver_id')
+            .eq('bus_id', bus.id)
+            .eq('active', true)
+            .is('ended_at', null)
+            .maybeSingle()
+
+        if (driverAssignmentError) {
+          console.warn(
+            'No se pudo consultar el conductor del vehículo:',
+            driverAssignmentError
+          )
+        } else if (driverAssignment?.driver_id) {
+          assignedDriverId = driverAssignment.driver_id
+        }
+      }
+
       const position =
         await getCurrentLocation()
 
@@ -814,6 +839,7 @@ function Student() {
         .insert({
           student_id: student.id,
           bus_id: bus?.id || null,
+          driver_id: assignedDriverId,
           transport_type: bus?.transport_type || null,
           vehicle_description: bus
             ? `${bus.plate}${bus.operator_name ? ` · ${bus.operator_name}` : ''}`

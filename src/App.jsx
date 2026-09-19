@@ -8,6 +8,7 @@ import Drivers from './pages/Drivers/Drivers'
 import Buses from './pages/buses/Buses'
 import Guardians from './pages/Guardians/Guardians'
 import Student from './pages/Student/Student'
+import Conductor from './pages/Conductor/Conductor'
 import AlertShare from './pages/AlertShare/AlertShare'
 import ProtectedRoute from './routes/ProtectedRoute'
 
@@ -26,6 +27,7 @@ function App() {
 
         {/* MAPA PÚBLICO DE ALERTA */}
         <Route path="/alerta/:token" element={<AlertShare />} />
+
 
         {/* =========================
             PORTAL ADMINISTRADOR
@@ -50,7 +52,7 @@ function App() {
           }
         />
 
-        {/* CONDUCTORES */}
+        {/* CONDUCTORES - ADMIN */}
         <Route
           path="/admin/conductores"
           element={
@@ -80,6 +82,7 @@ function App() {
           }
         />
 
+
         {/* =========================
             PORTAL ESTUDIANTE
            ========================= */}
@@ -89,6 +92,20 @@ function App() {
           element={
             <ProtectedRoute allowedRole="student">
               <Student />
+            </ProtectedRoute>
+          }
+        />
+
+
+        {/* =========================
+            PORTAL CONDUCTOR
+           ========================= */}
+
+        <Route
+          path="/conductor"
+          element={
+            <ProtectedRoute allowedRole="driver">
+              <Conductor />
             </ProtectedRoute>
           }
         />
