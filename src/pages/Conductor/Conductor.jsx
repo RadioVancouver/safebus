@@ -19,21 +19,44 @@ function Conductor() {
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
   const [lastAlertId, setLastAlertId] = useState(null)
-  const channelRef = useRef(null)
-  const audioContextRef = useRef(null)
-  const soundTimerRef = useRef(null)
   const [notificationsEnabled, setNotificationsEnabled] = useState(
     () => localStorage.getItem('safebus_driver_notifications') === 'true'
   )
+
+  const channelRef = useRef(null)
+  const audioContextRef = useRef(null)
+  const soundTimerRef = useRef(null)
+  const alertsRef = useRef([])
+  const lastAlertIdRef = useRef(null)
+  const notificationsEnabledRef = useRef(false)
+  const initializedAlertsRef = useRef(false)
+  const isMountedRef = useRef(true)
+
+  useEffect(() => {
+    notificationsEnabledRef.current = notificationsEnabled
+  }, [notificationsEnabled])
+
+  useEffect(() => {
+    alertsRef.current = alerts
+  }, [alerts])
+
+  useEffect(() => {
+    lastAlertIdRef.current = lastAlertId
+  }, [lastAlertId])
 
   useEffect(() => {
     initialize()
 
     return () => {
+      isMountedRef.current = false
+
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current)
+        channelRef.current = null
       }
+
       stopAlertNotification()
+
       if (audioContextRef.current) {
         audioContextRef.current.close().catch(() => {})
         audioContextRef.current = null
@@ -85,7 +108,6 @@ function Conductor() {
 
       await loadDriverData(driverData.id)
       subscribeToAlerts(driverData.id)
-
     } catch (err) {
       console.error(err)
       setError(err.message || 'No se pudo cargar el portal del conductor.')
@@ -127,12 +149,15 @@ function Conductor() {
       .order('plate', { ascending: true })
 
     if (busesError) throw busesError
+
     setBuses(busesData || [])
 
-    await loadActiveAlerts(driverId)
+    await loadActiveAlerts(driverId, { initialize: true })
   }
 
-  async function loadActiveAlerts(driverId) {
+  async function loadActiveAlerts(driverId, options = {}) {
+    const isInitialization = options.initialize === true
+
     const { data, error: alertsError } = await supabase
       .from('alerts')
       .select(`
@@ -167,10 +192,38 @@ function Conductor() {
 
     const enriched = await enrichAlertsWithLocations(data || [])
 
+    if (!isMountedRef.current) return
+
+    const previousIds = new Set(alertsRef.current.map((alert) => alert.id))
+    const newAlerts = enriched.filter((alert) => !previousIds.has(alert.id))
+
     setAlerts(enriched)
 
-    if (enriched.length > 0) {
-      setLastAlertId(enriched[0].id)
+    if (isInitialization) {
+      // No hacemos sonar alertas que ya existían cuando el conductor abrió el portal.
+      const newestId = enriched[0]?.id || null
+      setLastAlertId(newestId)
+      lastAlertIdRef.current = newestId
+      initializedAlertsRef.current = true
+      return
+    }
+
+    if (newAlerts.length > 0) {
+      const newest = newAlerts[0]
+
+      setLastAlertId(newest.id)
+      lastAlertIdRef.current = newest.id
+      setMessage('Hay una nueva alerta de emergencia asignada a tu vehículo.')
+
+      if (notificationsEnabledRef.current) {
+        await notifyNewAlert()
+      } else if ('vibrate' in navigator) {
+        navigator.vibrate([300, 100, 300, 100, 500])
+      }
+    } else if (enriched.length > 0 && !lastAlertIdRef.current) {
+      const newestId = enriched[0].id
+      setLastAlertId(newestId)
+      lastAlertIdRef.current = newestId
     }
   }
 
@@ -228,10 +281,14 @@ function Conductor() {
 
           if (!alertId) return
 
-          const exists = alerts.some((alert) => alert.id === alertId)
+          const exists = alertsRef.current.some((alert) => alert.id === alertId)
 
           if (exists) {
-            await loadActiveAlerts(driverId)
+            try {
+              await loadActiveAlerts(driverId)
+            } catch (err) {
+              console.error('Error actualizando ubicación:', err)
+            }
           }
         }
       )
@@ -254,19 +311,6 @@ function Conductor() {
     return () => clearInterval(interval)
   }, [driver?.id])
 
-  useEffect(() => {
-    if (!alerts.length) return
-
-    const newest = alerts[0]
-
-    if (lastAlertId && newest.id !== lastAlertId) {
-      setMessage('Hay una nueva alerta de emergencia asignada a tu vehículo.')
-      notifyNewAlert()
-    }
-
-    setLastAlertId(newest.id)
-  }, [alerts])
-
   function getAudioContext() {
     const AudioContextClass =
       window.AudioContext || window.webkitAudioContext
@@ -280,56 +324,88 @@ function Conductor() {
     return audioContextRef.current
   }
 
-  function playAlertBeep(audioContext, startTime, frequency = 880) {
+  function playAlertBeep(audioContext, startTime, frequency = 880, duration = 0.42) {
     const oscillator = audioContext.createOscillator()
     const gain = audioContext.createGain()
 
-    oscillator.type = 'sine'
+    oscillator.type = 'square'
     oscillator.frequency.setValueAtTime(frequency, startTime)
 
     gain.gain.setValueAtTime(0.0001, startTime)
-    gain.gain.exponentialRampToValueAtTime(0.18, startTime + 0.03)
-    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.35)
+    gain.gain.exponentialRampToValueAtTime(0.28, startTime + 0.025)
+    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration)
 
     oscillator.connect(gain)
     gain.connect(audioContext.destination)
 
     oscillator.start(startTime)
-    oscillator.stop(startTime + 0.38)
+    oscillator.stop(startTime + duration)
+  }
+
+  async function playAlertSound() {
+    const audioContext = getAudioContext()
+
+    if (!audioContext) {
+      throw new Error('Este navegador no admite audio web.')
+    }
+
+    if (audioContext.state === 'suspended') {
+      await audioContext.resume()
+    }
+
+    const now = audioContext.currentTime
+
+    // Secuencia audible de emergencia.
+    playAlertBeep(audioContext, now, 880)
+    playAlertBeep(audioContext, now + 0.48, 1046)
+    playAlertBeep(audioContext, now + 0.96, 880)
+    playAlertBeep(audioContext, now + 1.44, 1046)
+
+    return audioContext.state === 'running'
   }
 
   async function enableNotifications() {
     try {
+      // El click del usuario desbloquea el audio en Chrome/Edge.
       const audioContext = getAudioContext()
 
-      if (audioContext) {
-        if (audioContext.state === 'suspended') {
-          await audioContext.resume()
-        }
-
-        const now = audioContext.currentTime
-        playAlertBeep(audioContext, now, 660)
-        playAlertBeep(audioContext, now + 0.48, 880)
+      if (!audioContext) {
+        throw new Error('Este navegador no admite audio web.')
       }
 
+      if (audioContext.state === 'suspended') {
+        await audioContext.resume()
+      }
+
+      // Sonido de prueba inmediato.
+      await playAlertSound()
+
       if ('vibrate' in navigator) {
-        navigator.vibrate([120, 80, 120])
+        navigator.vibrate([150, 80, 150, 80, 300])
       }
 
       localStorage.setItem('safebus_driver_notifications', 'true')
+      notificationsEnabledRef.current = true
       setNotificationsEnabled(true)
-      setMessage('Sonido y vibración de alertas activados.')
+      setMessage(
+        'Sonido y vibración activados. El botón queda habilitado para futuras alertas.'
+      )
     } catch (err) {
       console.warn('No se pudieron activar las notificaciones:', err)
-      setError('El navegador no permitió activar el sonido. Pulsa nuevamente el botón.')
+      setError(
+        'El navegador no permitió activar el sonido. Verifica que la pestaña tenga permiso para reproducir sonido y pulsa nuevamente.'
+      )
     }
   }
 
   function disableNotifications() {
     localStorage.setItem('safebus_driver_notifications', 'false')
+    notificationsEnabledRef.current = false
     setNotificationsEnabled(false)
     stopAlertNotification()
-    setMessage('Sonido y vibración desactivados. Las alertas seguirán apareciendo en pantalla.')
+    setMessage(
+      'Sonido y vibración desactivados. Las alertas seguirán apareciendo en pantalla.'
+    )
   }
 
   function stopAlertNotification() {
@@ -344,47 +420,36 @@ function Conductor() {
   }
 
   async function notifyNewAlert() {
-    if (!notificationsEnabled) {
-      if ('vibrate' in navigator) {
-        navigator.vibrate([250, 120, 250])
-      }
-      return
-    }
-
     try {
-      const audioContext = getAudioContext()
-
-      if (audioContext) {
-        if (audioContext.state === 'suspended') {
-          await audioContext.resume()
-        }
-
-        const now = audioContext.currentTime
-        playAlertBeep(audioContext, now, 880)
-        playAlertBeep(audioContext, now + 0.48, 1046)
-        playAlertBeep(audioContext, now + 0.96, 880)
-
-        soundTimerRef.current = setTimeout(() => {
-          try {
-            const ctx = getAudioContext()
-            if (ctx && ctx.state === 'running') {
-              const t = ctx.currentTime
-              playAlertBeep(ctx, t, 880)
-              playAlertBeep(ctx, t + 0.48, 1046)
-            }
-          } catch (err) {
-            console.warn('No se pudo repetir el sonido:', err)
-          }
-        }, 2500)
-      }
+      await playAlertSound()
 
       if ('vibrate' in navigator) {
-        navigator.vibrate([300, 100, 300, 100, 500])
+        navigator.vibrate([400, 120, 400, 120, 700])
       }
+
+      // Repetir una segunda secuencia después de unos segundos.
+      if (soundTimerRef.current) {
+        clearTimeout(soundTimerRef.current)
+      }
+
+      soundTimerRef.current = setTimeout(async () => {
+        try {
+          if (notificationsEnabledRef.current) {
+            await playAlertSound()
+
+            if ('vibrate' in navigator) {
+              navigator.vibrate([300, 100, 300])
+            }
+          }
+        } catch (err) {
+          console.warn('No se pudo repetir el sonido:', err)
+        }
+      }, 3000)
     } catch (err) {
       console.warn('No se pudo reproducir la alerta sonora:', err)
+
       if ('vibrate' in navigator) {
-        navigator.vibrate([300, 100, 300])
+        navigator.vibrate([400, 120, 400])
       }
     }
   }
@@ -427,34 +492,37 @@ function Conductor() {
         if (closeError) throw closeError
       }
 
-      const { data: newAssignment, error: newAssignmentError } = await supabase
-        .from('driver_vehicle_assignments')
-        .insert({
-          driver_id: driver.id,
-          bus_id: selectedBus.id,
-          active: true
-        })
-        .select(`
-          *,
-          buses (
-            id,
-            code,
-            plate,
-            transport_type,
-            route,
-            operator_name,
-            capacity,
-            active
-          )
-        `)
-        .single()
+      const { data: newAssignment, error: newAssignmentError } =
+        await supabase
+          .from('driver_vehicle_assignments')
+          .insert({
+            driver_id: driver.id,
+            bus_id: selectedBus.id,
+            active: true
+          })
+          .select(`
+            *,
+            buses (
+              id,
+              code,
+              plate,
+              transport_type,
+              route,
+              operator_name,
+              capacity,
+              active
+            )
+          `)
+          .single()
 
       if (newAssignmentError) throw newAssignmentError
 
       setAssignment(newAssignment)
       setSelectedBusId(selectedBus.id)
       setShowVehicleModal(false)
-      setMessage(`Vehículo actualizado correctamente. Placa: ${selectedBus.plate}`)
+      setMessage(
+        `Vehículo actualizado correctamente. Placa: ${selectedBus.plate}`
+      )
     } catch (err) {
       console.error(err)
       setError(err.message || 'No se pudo actualizar el vehículo.')
@@ -659,10 +727,18 @@ function Conductor() {
                     : enableNotifications
                 }
               >
-                {notificationsEnabled ? '🔊 Alertas activas' : '🔔 Activar sonido'}
+                {notificationsEnabled
+                  ? '🔊 Alertas activas'
+                  : '🔔 Activar sonido'}
               </button>
 
-              <div className={alerts.length ? 'alert-count active' : 'alert-count'}>
+              <div
+                className={
+                  alerts.length
+                    ? 'alert-count active'
+                    : 'alert-count'
+                }
+              >
                 {alerts.length} activa{alerts.length === 1 ? '' : 's'}
               </div>
             </div>
@@ -691,7 +767,10 @@ function Conductor() {
                     : null)
 
                 return (
-                  <article className="alert-card-driver" key={alert.id}>
+                  <article
+                    className="alert-card-driver"
+                    key={alert.id}
+                  >
                     <div className="alert-card-top">
                       <div className="alert-danger-icon">🚨</div>
 
@@ -789,6 +868,7 @@ function Conductor() {
                   <p>VEHÍCULOS</p>
                   <h2>Seleccionar vehículo</h2>
                 </div>
+
                 <button
                   className="modal-close"
                   onClick={() => {
@@ -824,7 +904,9 @@ function Conductor() {
                           name="vehicle"
                           value={bus.id}
                           checked={selectedBusId === bus.id}
-                          onChange={(e) => setSelectedBusId(e.target.value)}
+                          onChange={(e) =>
+                            setSelectedBusId(e.target.value)
+                          }
                         />
 
                         <div className="vehicle-option-icon">🚌</div>
@@ -838,7 +920,9 @@ function Conductor() {
                         </div>
 
                         {bus.id === assignment?.bus_id && (
-                          <span className="current-badge">Actual</span>
+                          <span className="current-badge">
+                            Actual
+                          </span>
                         )}
                       </label>
                     ))}
