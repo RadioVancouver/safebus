@@ -342,3 +342,504 @@
   }
 
 }
+/* =========================================================
+   AJUSTE VISUAL DEL PANEL ADMINISTRADOR - SAFEBUS
+   ========================================================= */
+
+.admin-layout {
+  min-height: 100vh;
+  background: #f5f7fb;
+}
+
+/* =========================================================
+   CONTENIDO PRINCIPAL
+   ========================================================= */
+
+.admin-content {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 34px 32px 50px;
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   BIENVENIDA
+   ========================================================= */
+
+.admin-welcome {
+  margin-bottom: 28px;
+}
+
+.admin-welcome .section-label {
+  margin: 0 0 7px;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+.admin-welcome h1 {
+  margin: 0;
+  color: #102a4c;
+  font-size: 32px;
+  line-height: 1.15;
+  font-weight: 800;
+}
+
+.admin-welcome > p:not(.section-label) {
+  margin: 9px 0 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   TARJETAS PRINCIPALES
+   ========================================================= */
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+/* Evita que estilos globales de button afecten la tarjeta */
+.dashboard-card {
+  min-width: 0;
+  min-height: 170px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 22px;
+  box-sizing: border-box;
+
+  background: #ffffff;
+  border: 1px solid #dfe6ef;
+  border-radius: 16px;
+
+  box-shadow: 0 5px 18px rgba(15, 23, 42, .045);
+
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    border-color .18s ease;
+
+  cursor: pointer;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  border-color: #cbd8ea;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, .08);
+}
+
+/* Contenido superior de cada tarjeta */
+.dashboard-card > div {
+  min-width: 0;
+}
+
+/* Icono */
+.dashboard-card-icon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 15px;
+
+  border-radius: 12px;
+  background: #eef4ff;
+
+  font-size: 20px;
+}
+
+/* Título */
+.dashboard-card h3 {
+  margin: 0 0 4px;
+
+  color: #0f172a;
+  font-size: 17px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+/* Descripción */
+.dashboard-card p {
+  margin: 0;
+
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* =========================================================
+   ENLACE / BOTÓN GESTIONAR
+   ========================================================= */
+
+/*
+   Esta parte es importante.
+   Evita que el estilo global de button convierta
+   "Gestionar" en un texto gigante.
+*/
+
+.dashboard-card button,
+.dashboard-card a {
+  width: auto;
+  min-height: auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  gap: 7px;
+
+  margin-top: 17px;
+  padding: 0;
+
+  border: 0;
+  border-radius: 0;
+
+  background: transparent;
+
+  color: #0f172a;
+
+  font-size: 15px;
+  line-height: 1.2;
+  font-weight: 700;
+
+  text-align: left;
+  text-decoration: none;
+
+  cursor: pointer;
+
+  box-shadow: none;
+}
+
+.dashboard-card button:hover,
+.dashboard-card a:hover {
+  color: #2563eb;
+  background: transparent;
+  transform: none;
+}
+
+.dashboard-card button::after,
+.dashboard-card a::after {
+  content: '→';
+
+  color: #2563eb;
+  font-size: 19px;
+  font-weight: 500;
+
+  transition: transform .15s ease;
+}
+
+.dashboard-card button:hover::after,
+.dashboard-card a:hover::after {
+  transform: translateX(3px);
+}
+
+/* =========================================================
+   TARJETA DE ALERTAS
+   ========================================================= */
+
+.dashboard-card.alert-card {
+  position: relative;
+}
+
+.dashboard-card.alert-card .dashboard-card-icon {
+  background: #fff1f1;
+}
+
+.dashboard-card.alert-card h3 {
+  color: #0f172a;
+}
+
+.dashboard-card.alert-card button,
+.dashboard-card.alert-card a {
+  color: #0f172a;
+}
+
+/* =========================================================
+   INFORMACIÓN DEL SISTEMA
+   ========================================================= */
+
+.admin-info {
+  width: 100%;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+
+  padding: 22px;
+
+  background: #ffffff;
+  border: 1px solid #dfe6ef;
+  border-radius: 16px;
+
+  box-shadow: 0 5px 18px rgba(15, 23, 42, .035);
+}
+
+.admin-info > span:first-child {
+  width: 34px;
+  height: 34px;
+
+  flex: 0 0 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+  background: #eef4ff;
+
+  color: #2563eb;
+  font-size: 16px;
+}
+
+.admin-info strong {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #172b49;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.admin-info p {
+  margin: 0;
+
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   HEADER / NAVEGACIÓN
+   ========================================================= */
+
+.admin-header {
+  min-height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 28px;
+
+  box-sizing: border-box;
+
+  background: #0d172b;
+  color: #ffffff;
+}
+
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.admin-logo {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #2563eb;
+
+  font-size: 19px;
+}
+
+.admin-brand strong {
+  display: block;
+
+  color: #ffffff;
+  font-size: 15px;
+  line-height: 1.1;
+}
+
+.admin-brand span {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #9fb0c8;
+  font-size: 10px;
+}
+
+/* Navegación */
+.admin-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.admin-nav .nav-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 38px;
+
+  padding: 0 13px;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: transparent;
+  color: #d7dfec;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  text-decoration: none;
+
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+
+.admin-nav .nav-item:hover {
+  background: #18263f;
+  color: #ffffff;
+}
+
+.admin-nav .nav-item.active {
+  background: #1d2c46;
+  color: #ffffff;
+}
+
+/* Cerrar sesión */
+.logout-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 38px;
+
+  padding: 0 12px;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: transparent;
+  color: #ffb0b0;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: rgba(255, 255, 255, .06);
+  color: #ffffff;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+  .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-nav {
+    gap: 2px;
+  }
+
+  .admin-nav .nav-item {
+    padding: 0 9px;
+  }
+}
+
+@media (max-width: 760px) {
+
+  .admin-header {
+    min-height: auto;
+
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 14px;
+
+    padding: 14px 18px;
+  }
+
+  .admin-brand {
+    justify-content: center;
+  }
+
+  .admin-nav {
+    width: 100%;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    gap: 4px;
+  }
+
+  .admin-nav .nav-item,
+  .logout-button {
+    min-height: 34px;
+    padding: 0 9px;
+    font-size: 11px;
+  }
+
+  .admin-content {
+    padding: 24px 16px 40px;
+  }
+
+  .admin-welcome h1 {
+    font-size: 27px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .dashboard-card {
+    min-height: 150px;
+    padding: 19px;
+  }
+
+  .admin-info {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .admin-welcome h1 {
+    font-size: 24px;
+  }
+
+  .admin-welcome > p:not(.section-label) {
+    font-size: 13px;
+  }
+
+  .dashboard-card {
+    min-height: 140px;
+  }
+
+  .dashboard-card h3 {
+    font-size: 16px;
+  }
+
+  .dashboard-card p {
+    font-size: 12px;
+  }
+}
